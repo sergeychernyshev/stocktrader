@@ -1,5 +1,4 @@
 <?
-require_once 'PHPUnit/Framework.php';
 require_once('datamodel/Card.php');
 
 class CardTest extends PHPUnit_Framework_TestCase

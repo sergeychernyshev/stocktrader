@@ -1,5 +1,4 @@
 <?
-require_once 'PHPUnit/Framework.php';
 require_once('datamodel/Game.php');
 
 class GameTest extends PHPUnit_Framework_TestCase

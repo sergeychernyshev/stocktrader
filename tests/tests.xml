@@ -1,5 +1,0 @@
-<phpunit>
-  <testsuite name="StockGame">
-    <directory suffix=".php">tests</directory>
-  </testsuite>
-</phpunit>
