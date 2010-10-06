@@ -1,23 +1,2 @@
 Stock trading game - more close to chess then to monopoly.
 
-## Rules
-
-This document describes all rules of the game. Rule numbers should be referenced within implementation code comments.
-
-1. Game starts with 1 stock of each color for all players, bank balances are zeroed.
-
-2. Each player gets as set of cards - 3 big + 5 small (8 turns) or 4 big + 6 small (10 turns), other combinations are possible in theory.
-
-3. Players make moves in turnes with following stages of the move (in all stages, player only deals with the bank, amount of stocks available are not limited:
-	a. Player can sell (1) stocks he has (adding money to bank balance) and buy (2) other stocks, but not overdrafting his bank balance.
-	b. Player plays one of his unplayed (1) cards and change prices according to the card specifications (2).
-	c. Player can sell (1) stocks he had at the beginning of the move and buy (2) other stocks, user can also leave some money in the bank, but never overdraft his bank balance (3). Player can't sell more stock increased in price then he had before the move (4).
-4. Game is over when all cards are played (1). During last turn (each player playing their last card), players can't buy or sell stock (2).
-
-5. In some cases, players get compensation if stock prices change:
-	a. If player lowered the price of stock that he owns, this (and only this) player gets a compensation equal to the amount he would've lost (price drop multiplied by the amount of stock he has) (1). These money are added to his bank balance and can be used after card is played (3c). In case when price dropped below 10, compensation is calculated as difference between old price and 10 (since player doesn't loose any zeroed stock, see rule 6) (2).
-	b. If price of stocks went over 250, all players get the compensation in the amount of the difference multiplied by the amount of stock they have, these money are added to players bank balances. Player making the move can use these money after card is played (3c).
-
-6. If price drops below 10 (zeroed out), all players (other then the person making the move) have to pay the fee equal to the amount of price drop (unlike compensation in 5a(2), it includes the drop below 10) multiplied be the amount of stock they have. Fees are paid from bank balance, including all compensation player got during the same move (see rule 5b). All stock, player can't pay a fee for, get lost. Changes get reflected in players stock list and bank balance (1). If several stocks got zeroed out (100 card was used), the fee is paid first for stocks fee for which is lower (2). If fee is the same for multiple stocks, then fees are paid first for stock that had higher price before the move (lost more in price) (3).
-
-7. If :2 card was played, the price can be rounded up or down depending on opponent agreement (rounding up is less aggressive and therefore default).
