@@ -1,0 +1,87 @@
+/*
+	Game number
+*/
+#gamenumber {
+	padding: 10px;
+	border: 1px solid black;
+	float: right;
+}
+
+#gamesuffix {
+	font-size: x-small;
+	vertical-align:top;
+}
+
+/*
+	Game Players
+*/
+#gameplayers {
+	border: 1px solid black;
+	width: 300px;
+	padding: 5px;
+
+	margin-bottom: 10px;
+}
+
+#player1 {
+	color: blue;
+}
+
+#player2 {
+	color: green;
+}
+
+#player3 {
+	color: maroon;
+}
+
+#player4 {
+	color: purple;
+}
+
+div.player {
+	padding: 5px;
+}
+
+/*
+	Game Moves
+*/
+#gameturns {
+	border: 1px solid black;
+	width: 100%;
+}
+
+td {
+	text-align: center;
+}
+
+td.turnnum {
+	border: 1px solid black;
+}
+
+td.blue-before, td.red-before, td.yellow-before, td.green-before {
+	border: 1px solid black;
+}
+
+td.card {
+	border: 1px solid black;
+}
+
+td.blue-price, td.red-price, td.yellow-price, td.green-price {
+	border: 1px solid black;
+	color: silver;
+}
+
+td.changed {
+	color: black;
+	font-weight: bold;
+}
+
+td.blue-after, td.red-after, td.yellow-after, td.green-after {
+	border: 1px solid black;
+}
+
+td.bank {
+	border: 1px solid black;
+	text-align: right;
+}
