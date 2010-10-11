@@ -3,7 +3,7 @@ require_once('datamodel/Game.php');
 
 class GameTest extends PHPUnit_Framework_TestCase
 {
-	public static function gameAndMoveDataProvider()
+	public static function gameAndTurnDataProvider()
 	{
 		$p1 = new Player(new User(1, 'Sergey Chernyshev', 'sergeychernyshev'));
 		$p2 = new Player(new User(2, 'Dmitry Roslyakov', 'dr_gonzo'));
@@ -70,7 +70,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 			# 0 
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+30, Card::BLUE),
@@ -83,7 +83,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 			# 1
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 2, Card::RED => 0, Card::YELLOW => 0, Card::GREEN => 2),
 					new SmallCard(+30, Card::BLUE),
@@ -97,7 +97,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -108,7 +108,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(-30, Card::RED),
@@ -121,7 +121,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 			# 3
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 2, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+30, Card::BLUE),
@@ -130,13 +130,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 					0,
 					null
 				),
-				'InvalidMoveException'				
+				'InvalidTurnException'				
 			),
 			# 4
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -145,7 +145,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -156,7 +156,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 0, Card::RED => 36, Card::YELLOW => 0, Card::GREEN => 1),
 					new SmallCard(+60, Card::RED),
@@ -165,13 +165,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 					20,
 					null
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 5 - testing rounding up
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -182,7 +182,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new DivideBy2(Card::BLUE),
@@ -196,7 +196,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -207,7 +207,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new DivideBy2(Card::BLUE),
@@ -222,7 +222,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, false, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -233,7 +233,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new DivideBy2(Card::BLUE),
@@ -247,7 +247,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, false, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -258,7 +258,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new DivideBy2(Card::BLUE),
@@ -273,7 +273,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, false, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new DivideBy2(Card::RED),
@@ -284,7 +284,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new MultiplyBy2(Card::GREEN),
@@ -301,7 +301,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2, $p3), 4, 6, false, $d3,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new DivideBy2(Card::RED),
@@ -310,7 +310,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							50,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new MultiplyBy2(Card::GREEN),
@@ -325,7 +325,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p3,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new DivideBy2(Card::YELLOW),
@@ -339,11 +339,11 @@ class GameTest extends PHPUnit_Framework_TestCase
 					)
 				)
 			),
-			# 11 - (pass) game with two turns - last turns must not sell or buy
+			# 11 - (pass) game with two rounds - last turns must not sell or buy
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2px2m,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -352,7 +352,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -363,7 +363,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new MultiplyBy2(Card::GREEN),
@@ -373,11 +373,11 @@ class GameTest extends PHPUnit_Framework_TestCase
 					null
 				)
 			),
-			# 12 - (fail) game with two turns - last turns must not sell or buy
+			# 12 - (fail) game with two rounds - last turns must not sell or buy
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2px2m,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -386,7 +386,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -397,7 +397,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new MultiplyBy2(Card::GREEN),
@@ -406,13 +406,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 					0,
 					null
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
-			# 13 - (fail) all moves in the game are already played
+			# 13 - (fail) all turns in the game are already played
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2px2m,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -421,7 +421,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -430,7 +430,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							30,
 							null
 						),
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new MultiplyBy2(Card::GREEN),
@@ -439,7 +439,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							140,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new DivideBy2(Card::GREEN),
@@ -450,7 +450,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new MultiplyBy2(Card::GREEN),
@@ -459,12 +459,12 @@ class GameTest extends PHPUnit_Framework_TestCase
 					140,
 					null
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 14 (fail) - wrong player
                         array(
 				new Game(1, 'A', array($p1, $p2), 4, 6, true, $d2),
-				new Move(
+				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+30, Card::BLUE),
@@ -473,13 +473,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 					10,
 					null
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 15 - (pass) price goes below 10 - opponent gets fined
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -488,7 +488,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -499,7 +499,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -519,7 +519,7 @@ class GameTest extends PHPUnit_Framework_TestCase
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -528,7 +528,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -539,7 +539,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -554,13 +554,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 17 - (fail) balances after paying fees don't match
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -569,7 +569,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -580,7 +580,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -595,13 +595,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
-			# 18 - (fail) user didn't have that many stocks before compensation
+			# 18 - (fail) player didn't have that many stocks before compensation
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -610,7 +610,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -621,7 +621,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -636,13 +636,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 19 - (fail) Not enough money in the bank to pay off the fee that many stocks. 
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -651,7 +651,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -662,7 +662,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -677,13 +677,13 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
 			# 20 - (fail) Bank balances after the fee don't match. 
                         array(
 				new Game(1, 'A', array($p1, $p2), 1, 1, true, $d2,
 					array(
-						new Move(
+						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(+30, Card::BLUE),
@@ -692,7 +692,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 							60,
 							null
 						),
-						new Move(
+						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							new SmallCard(-30, Card::RED),
@@ -703,7 +703,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				new Move(
+				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					new SmallCard(+60, Card::BLUE),
@@ -718,9 +718,9 @@ class GameTest extends PHPUnit_Framework_TestCase
 						)
 					)
 				),
-				'InvalidMoveException'
+				'InvalidTurnException'
 			),
-			# TODO write tests to test all the compensation combinatons for other users including thise when user gets both compensation when going above 250 and getting fined when going below 10 all in the same move. Plus multiple stock fines (100 pushing several values below 10).
+			# TODO write tests to test all the compensation combinatons for other players including thise when player gets both compensation when going above 250 and getting fined when going below 10 all in the same turn. Plus multiple stock fines (100 pushing several values below 10).
                 );
 
 		# just run one test for debugging
@@ -729,15 +729,15 @@ class GameTest extends PHPUnit_Framework_TestCase
 	}
 
         /**
-         * @dataProvider gameAndMoveDataProvider
+         * @dataProvider gameAndTurnDataProvider
          */
-	public function testMoveValidation($game, $move, $expectedException = null)
+	public function testTurnValidation($game, $turn, $expectedException = null)
 	{
 		if (!is_null($expectedException))
 		{
 			$this->setExpectedException($expectedException);
 		}
 
-		$this->assertTrue($game->validateMove($move));
+		$this->assertTrue($game->validateTurn($turn));
 	}
 }

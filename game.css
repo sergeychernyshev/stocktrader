@@ -44,9 +44,9 @@ div.player {
 }
 
 /*
-	Game Moves
+	Game Rounds 
 */
-#gameturns {
+#gamerounds {
 	border: 1px solid black;
 	width: 100%;
 }
@@ -55,7 +55,7 @@ td {
 	text-align: center;
 }
 
-td.turnnum {
+td.roundnum {
 	border: 1px solid black;
 }
 

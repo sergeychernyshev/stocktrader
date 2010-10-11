@@ -41,67 +41,67 @@ $prices = array(
 );
 
 ?>
-<table id="gameturns">
+<table id="gamerounds">
 <?php
-$turns = $game->getTurns();
+$rounds = $game->getRounds();
 
-for ($t=0; $t < count($turns); $t++)
+for ($t=0; $t < count($rounds); $t++)
 {
-	$turn = $turns[$t];
+	$round = $rounds[$t];
 
 	?>
-	<!-- START turn <?php echo $t+1 ?> -->
+	<!-- START round <?php echo $t+1 ?> -->
 	<?php
 
-	# printing moves
+	# printing turns 
 	for ($m=0; $m < $totalPlayers; $m++)
 	{
 		?>
-		<tr class="move player<?php echo $m+1 ?>move" id="move<?php echo $t+1 ?>-<?php echo $m+1 ?>">
+		<tr class="turn player<?php echo $m+1 ?>turn" id="turn<?php echo $t+1 ?>-<?php echo $m+1 ?>">
 		<?php
 		if ($m == 0)
 		{
-			?><td class="turnnum" rowspan="<?php echo $totalPlayers ?>"><?php echo $t+1?></td><?php
+			?><td class="roundnum" rowspan="<?php echo $totalPlayers ?>"><?php echo $t+1?></td><?php
 		}
 
-		if (array_key_exists($m, $turn))
+		if (array_key_exists($m, $round))
 		{
-			$move = $turn[$m];
+			$turn = $round[$m];
 
 			# printing amounts before
 			?>
-			<td class="blue-before"><?php echo $move->before[Card::BLUE] ?></td>
-			<td class="red-before"><?php echo $move->before[Card::RED] ?></td>
-			<td class="yellow-before"><?php echo $move->before[Card::YELLOW] ?></td>
-			<td class="green-before"><?php echo $move->before[Card::GREEN] ?></td>
+			<td class="blue-before"><?php echo $turn->before[Card::BLUE] ?></td>
+			<td class="red-before"><?php echo $turn->before[Card::RED] ?></td>
+			<td class="yellow-before"><?php echo $turn->before[Card::YELLOW] ?></td>
+			<td class="green-before"><?php echo $turn->before[Card::GREEN] ?></td>
 
-			<td class="card"><?php echo $move->card->asString() ?></td>
+			<td class="card"><?php echo $turn->card->asString() ?></td>
 
 			<?php
-			foreach (array_keys($move->price_changes) as $color)
+			foreach (array_keys($turn->price_changes) as $color)
 			{
-				$prices[$color] = $move->price_changes[$color];
+				$prices[$color] = $turn->price_changes[$color];
 			}
 			?>
 
-			<td class="blue-price<?php echo (array_key_exists(Card::BLUE, $move->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::BLUE] ?></td>
+			<td class="blue-price<?php echo (array_key_exists(Card::BLUE, $turn->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::BLUE] ?></td>
 
-			<td class="red-price<?php echo (array_key_exists(Card::RED, $move->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::RED] ?></td>
-			<td class="yellow-price<?php echo (array_key_exists(Card::YELLOW, $move->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::YELLOW] ?></td>
-			<td class="green-price<?php echo (array_key_exists(Card::GREEN, $move->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::GREEN] ?></td>
-
-			<?php
-			# TODO: calculate updates to after amounts made by consequent moves
-			?>
-			<td class="blue-after"><?php echo $move->after[Card::BLUE] ?></td>
-			<td class="red-after"><?php echo $move->after[Card::RED] ?></td>
-			<td class="yellow-after"><?php echo $move->after[Card::YELLOW] ?></td>
-			<td class="green-after"><?php echo $move->after[Card::GREEN] ?></td>
+			<td class="red-price<?php echo (array_key_exists(Card::RED, $turn->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::RED] ?></td>
+			<td class="yellow-price<?php echo (array_key_exists(Card::YELLOW, $turn->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::YELLOW] ?></td>
+			<td class="green-price<?php echo (array_key_exists(Card::GREEN, $turn->price_changes) ? ' changed' : '') ?>"><?php echo $prices[Card::GREEN] ?></td>
 
 			<?php
-			# TODO: calculate updates to bank balance made by consequent moves
+			# TODO: calculate updates to after amounts made by consequent turns 
 			?>
-			<td class="bank"><?php echo $move->bank ?></td>
+			<td class="blue-after"><?php echo $turn->after[Card::BLUE] ?></td>
+			<td class="red-after"><?php echo $turn->after[Card::RED] ?></td>
+			<td class="yellow-after"><?php echo $turn->after[Card::YELLOW] ?></td>
+			<td class="green-after"><?php echo $turn->after[Card::GREEN] ?></td>
+
+			<?php
+			# TODO: calculate updates to bank balance made by consequent turns
+			?>
+			<td class="bank"><?php echo $turn->bank ?></td>
 		<?php
 		}
 		else
@@ -132,7 +132,7 @@ for ($t=0; $t < count($turns); $t++)
 	<?php
 	}
 	?>
-	<!-- END turn <?php echo $t+1 ?> -->
+	<!-- END round`<?php echo $t+1 ?> -->
 <?php
 }
 ?>

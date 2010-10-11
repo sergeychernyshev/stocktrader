@@ -16,7 +16,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 		)
 	),
 	array(
-		new Move(
+		new Turn(
 			$p1,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			new SmallCard(+30, Card::BLUE),
@@ -25,7 +25,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 			60,
 			null
 		),
-		new Move(
+		new Turn(
 			$p2,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			new SmallCard(-30, Card::RED),
@@ -34,7 +34,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 			30,
 			null
 		),
-		new Move(
+		new Turn(
 			$p1,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			new MultiplyBy2(Card::GREEN),
@@ -43,7 +43,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 			140,
 			null
 		),
-		new Move(
+		new Turn(
 			$p2,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			new DivideBy2(Card::GREEN),

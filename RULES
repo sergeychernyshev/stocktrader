@@ -10,7 +10,7 @@ This document describes all rules of the game. Rule numbers should be referenced
 3. Players make moves in turnes with following stages of the move (in all stages, player only deals with the bank, amount of stocks available are not limited:
 	a. Player can sell (1) stocks he has (adding money to bank balance) and buy (2) other stocks, but not overdrafting his bank balance.
 	b. Player plays one of his unplayed (1) cards and change prices according to the card specifications (2).
-	c. Player can sell (1) stocks he had at the beginning of the move and buy (2) other stocks, user can also leave some money in the bank, but never overdraft his bank balance (3). Player can't sell more stock increased in price then he had before the move (4).
+	c. Player can sell (1) stocks he had at the beginning of the move and buy (2) other stocks, player can also leave some money in the bank, but never overdraft his bank balance (3). Player can't sell more stock increased in price then he had before the move (4).
 4. Game is over when all cards are played (1). During last turn (each player playing their last card), players can't buy or sell stock (2).
 
 5. In some cases, players get compensation if stock prices change:

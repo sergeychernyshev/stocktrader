@@ -9,7 +9,7 @@
 #
 require_once(dirname(__FILE__).'/SmallCard.php');
 require_once(dirname(__FILE__).'/BigCard.php');
-require_once(dirname(__FILE__).'/Move.php');
+require_once(dirname(__FILE__).'/Turn.php');
 require_once(dirname(__FILE__).'/Player.php');
 
 class Game
@@ -18,14 +18,14 @@ class Game
 	private $number;
 	private $suffix; # A, B, C, D and etc.
 
-	# array of players (number of players equals number of moves in one turn)
+	# array of players (number of players equals number of turns in one round)
 	private $players;
 
 	# an array of arrays of player cards for each player
 	private $playerCards = array();
 
-	# should be 10 turns with X moves where X is equals number of players
-	private $turns = array();
+	# should be 10 rounds with X turns where X is equals number of players
+	private $rounds = array();
 
 	# number of big cards
 	private $bigCardsAmount;
@@ -33,20 +33,20 @@ class Game
 	# number of small cards
 	private $smallCardsAmount;
 
-	# total number of turns in the game
-	private $totalTurns;
+	# total number of rounds in the game
+	private $totalRounds;
 
 	# rounding up (or down) if :2 is used
 	private $rounding;
 
-	function __construct($number, $suffix, $players, $bigCardsAmount = 4, $smallCardsAmount = 6, $rounding = true, $decks = null, $moves = null)
+	function __construct($number, $suffix, $players, $bigCardsAmount = 4, $smallCardsAmount = 6, $rounding = true, $decks = null, $turns = null)
 	{
 		$this->number = $number;
 		$this->suffix = $suffix;
 		$this->players = $players;
 		$this->bigCardsAmount = $bigCardsAmount;
 		$this->smallCardsAmount = $smallCardsAmount;
-		$this->totalTurns = $bigCardsAmount + $smallCardsAmount;
+		$this->totalRounds = $bigCardsAmount + $smallCardsAmount;
 		$this->rounding = $rounding;
 
 		if (is_null($decks))
@@ -63,11 +63,11 @@ class Game
 			throw new InvalidGameStateException("Game state is not valid, can't proceed.");
 		}
 
-		if (!is_null($moves))
+		if (!is_null($turns))
 		{
-			foreach ($moves as $move)
+			foreach ($turns as $turn)
 			{
-				$this->makeMove($move);
+				$this->makeTurn($turn);
 			}
 		}
 	}
@@ -84,8 +84,8 @@ class Game
 	public function getPlayerCards() {
 		return $this->playerCards;
 	}
-	public function getTurns() {
-		return $this->turns;
+	public function getRounds() {
+		return $this->rounds;
 	}
 	public function getBigCardsAmount() {
 		return $this->bigCardsAmount;
@@ -93,8 +93,8 @@ class Game
 	public function getSmallCardsAmount() {
 		return $this->smallCardsAmount;
 	}
-	public function getTotalTurns() {
-		return $this->totalTurns;
+	public function getTotalRounds() {
+		return $this->totalRounds;
 	}
 	public function isroundingUp() {
 		return $this->rounding;
@@ -148,33 +148,33 @@ class Game
 		}
 	}
 
-	function makeMove($move)
+	function makeTurn($turn)
 	{
-		$valid = $this->validateMove($move);
+		$valid = $this->validateTurn($turn);
 
 		if (!$valid)
 		{
-			throw new InvalidMoveException("Didn't pass move validation");
+			throw new InvalidTurnException("Didn't pass turn validation");
 		}
 
-		if (count($this->turns)>0)
+		if (count($this->rounds)>0)
 		{
-			$lastTurn = $this->turns[count($this->turns)-1];
+			$lastRound= $this->rounds[count($this->rounds)-1];
 
-			if (count($lastTurn) == $this->getNumberOfPlayers())
+			if (count($lastRound) == $this->getNumberOfPlayers())
 			{
-				# first move in next turn 
-				$this->turns[] = array($move);
+				# first turn in next round 
+				$this->rounds[] = array($turn);
 			}
 			else
 			{
-				$this->turns[count($this->turns)-1][] = $move;
+				$this->rounds[count($this->rounds)-1][] = $turn;
 			}
 		}
 		else
 		{
-			# first move by first player in first turn
-			$this->turns[] = array($move);
+			# first turn by first player in first round 
+			$this->rounds[] = array($turn);
 		}
 	}
 
@@ -183,70 +183,70 @@ class Game
 		return count($this->players);
 	}
 
-	# TODO validate game state (not including moves - should be called before moves were applied)
+	# TODO validate game state (not including turn - should be called before turns were applied)
 	function validateGame()
 	{
 		return true;
 	}
 
-	# check if move data is not conflicting with, return true or throw an InvalidMove exception
-	function validateMove($move)
+	# check if turn data is not conflicting with, return true or throw an InvalidTurn exception
+	function validateTurn($turn)
 	{
 		/**
-			[Rule 4(1)] Check if game still has unplayed moves
+			[Rule 4(1)] Check if game still has unplayed turns 
 		*/
-		if (count($this->turns) == $this->totalTurns && count($this->turns[count($this->turns)-1]) == $this->getNumberOfPlayers())
+		if (count($this->rounds) == $this->totalRounds && count($this->rounds[count($this->rounds)-1]) == $this->getNumberOfPlayers())
 		{
-			throw new InvalidMoveException('All moves in the game are already played');
+			throw new InvalidTurnException('All turns in the game are already played');
 		}
 
 		/**
 			[Rule 3a]
 			Validate stock amounts before card was played.
-			Value of stocks must be equal or less the value of stocks of the user plus amount in the bank
-				after previus (last opponent's) move.
+			Value of stocks must be equal or less the value of stocks of the player plus amount in the bank
+				after previus (last opponent's) turn.
 		*/
 
-		# get the amounts after this user's last move
+		# get the amounts after this player's last turn 
 		$before;
 
-		$currentTurn; # turn in which this move is being made
-		$prevTurn; # previous turn
-		$playerNumber; # a number of the player making this move
+		$currentRound; # round in which this turn is being made
+		$prevRound; # previous round 
+		$playerNumber; # a number of the player making this turn 
 
-		if (count($this->turns)>1)
+		if (count($this->rounds)>1)
 		{
-			$lastTurn = $this->turns[count($this->turns)-1];
+			$lastRound = $this->rounds[count($this->rounds)-1];
 
-			if (count($lastTurn) == $this->getNumberOfPlayers())
+			if (count($lastRound) == $this->getNumberOfPlayers())
 			{
-				$currentTurn = array();
-				$prevTurn = $lastTurn;
+				$currentRound = array();
+				$prevRound = $lastRound;
 				$playerNumber = 0;
 			}
 			else
 			{
-				$currentTurn = $lastTurn;
-				$prevTurn = $this->turns[count($this->turns)-2];
-				$playerNumber = count($currentTurn);
+				$currentRound = $lastRound;
+				$prevRound = $this->rounds[count($this->rounds)-2];
+				$playerNumber = count($currentRound);
 			}
 
 
-			# if last turn is full, then new one is current
-			# this means that currentTurn is never full
-			$prevUserMove = $prevTurn[$playerNumber];
+			# if last round is full, then new one is current
+			# this means that currentRound is never full
+			$prevPlayerTurn = $prevRound[$playerNumber];
 
 			$before = array(
-				Card::BLUE => $prevUserMove->after[Card::BLUE],
-				Card::RED => $prevUserMove->after[Card::RED],
-				Card::YELLOW => $prevUserMove->after[Card::YELLOW],
-				Card::GREEN => $prevUserMove->after[Card::GREEN],
-				'bank' => $prevUserMove->bank
+				Card::BLUE => $prevPlayerTurn->after[Card::BLUE],
+				Card::RED => $prevPlayerTurn->after[Card::RED],
+				Card::YELLOW => $prevPlayerTurn->after[Card::YELLOW],
+				Card::GREEN => $prevPlayerTurn->after[Card::GREEN],
+				'bank' => $prevPlayerTurn->bank
 			);
 		}
 		else
 		{
-			# this user didn't make a move yet, it means he had 1 of each and no money in the bank
+			# this player didn't make a turn yet, it means he had 1 of each and no money in the bank
 			$before = array(
 				Card::BLUE => 1,
 				Card::RED => 1,
@@ -255,72 +255,72 @@ class Game
 				'bank' => 0
 			);
 
-			# this is very first move
-			if (count($this->turns) == 0)
+			# this is very first turn 
+			if (count($this->rounds) == 0)
 			{
-				$currentTurn = array();
-				$prevTurn = null;
+				$currentRound = array();
+				$prevRound = null;
 				$playerNumber = 0;
 			}
-			# first turn is just over
-			elseif (count($this->turns[0]) == $this->getNumberOfPlayers())
+			# first round is just over
+			elseif (count($this->rounds[0]) == $this->getNumberOfPlayers())
 			{
-				$currentTurn = array();
-				$prevTurn = $this->turns[0];
+				$currentRound = array();
+				$prevRound = $this->rounds[0];
 				$playerNumber = 0;
 
-				# this user actually made one move before
+				# this player actually made one turn before
 				$before = array(
-					Card::BLUE => $prevTurn[0]->after[Card::BLUE],
-					Card::RED => $prevTurn[0]->after[Card::RED],
-					Card::YELLOW => $prevTurn[0]->after[Card::YELLOW],
-					Card::GREEN => $prevTurn[0]->after[Card::GREEN],
-					'bank' => $prevTurn[0]->bank
+					Card::BLUE => $prevRound[0]->after[Card::BLUE],
+					Card::RED => $prevRound[0]->after[Card::RED],
+					Card::YELLOW => $prevRound[0]->after[Card::YELLOW],
+					Card::GREEN => $prevRound[0]->after[Card::GREEN],
+					'bank' => $prevRound[0]->bank
 				);
 			}
-			#first turn in progress
+			#first round in progress
 			else
 			{
-				$currentTurn = $this->turns[0];
-				$prevTurn = null;
-				$playerNumber = count($currentTurn);
+				$currentRound = $this->rounds[0];
+				$prevRound = null;
+				$playerNumber = count($currentRound);
 			}
 		}
 
-		# now lets apply all changes to user's amounts from opponents moves since users last move
-		$opponent_moves = array();
+		# now lets apply all changes to player's amounts from opponents turns since player's last turn 
+		$opponent_turns = array();
 
-		# first, go through previous turn if there was previous turn and this is not last move in turn
-		if (!is_null($prevTurn) && $playerNumber < $this->getNumberOfPlayers()-1)
+		# first, go through previous round if there was previous round and this is not last turn in round 
+		if (!is_null($prevRound) && $playerNumber < $this->getNumberOfPlayers()-1)
 		{
 			for ($i=$playerNumber+1; $i<$this->getNumberOfPlayers(); $i++)
 			{
-				$opponent_moves[] = $prevTurn[$i];
+				$opponent_turns[] = $prevRound[$i];
 			}
 		}
-		# now, let's add all moves already in current turn
-		$opponent_moves = array_merge($opponent_moves, $currentTurn);
+		# now, let's add all turns already in current round 
+		$opponent_turns = array_merge($opponent_turns, $currentRound);
 
-		# OK, we got a sequence of opponent moves after user's previous move, let's apply changes from each move if they exist
-		foreach($opponent_moves as $opponent_move)
+		# OK, we got a sequence of opponent turns after player's previous turn, let's apply changes from each turn if they exist
+		foreach($opponent_turns as $opponent_turn)
 		{
 			/**
 				if whole change set is null it means there were no changed,
 				if change for the player is null, it means this players amounts were not affected.
 				In both cases, there are no changes to apply.
 			*/
-			if (is_null($opponent_move->opponent_changes) || is_null($opponent_move->opponent_changes[$playerNumber]))
+			if (is_null($opponent_turn->opponent_changes) || is_null($opponent_turn->opponent_changes[$playerNumber]))
 			{
 				continue;
 			}
 
-			foreach ($opponent_move->opponent_changes[$playerNumber] as $key => $value)
+			foreach ($opponent_turn->opponent_changes[$playerNumber] as $key => $value)
 			{
 				$before[$key] = $value;
 			}
 		}
 
-		# now, let's calculate the value by multiplying user stock amounts by their prices from last opponent's move
+		# now, let's calculate the value by multiplying player's stock amounts by their prices from last opponent's turn 
 
 		# first we need to calculate current prices, initial price is 100 for all stocks
 		$prices = array(
@@ -330,13 +330,13 @@ class Game
 			Card::GREEN => 100
 		);
 
-		# let's through all moves that were made in the game and apply changes
-		foreach ($this->turns as $turn)
+		# let's through all turns that were made in the game and apply changes
+		foreach ($this->rounds as $round)
 		{
-			foreach ($turn as $turn_move)
+			foreach ($round as $round_turn)
 			{
 				# get all changed price (only changed ones are defined)
-				foreach ($turn_move->price_changes as $color => $new_value)
+				foreach ($round_turn->price_changes as $color => $new_value)
 				{
 					$prices[$color] = $new_value;
 
@@ -355,23 +355,23 @@ class Game
 			}
 		}
 
-		# ok, we got prices, we got user's last move stock and bank amounts, let's get the value
-		$value_after_last_move = $before['bank'] +
+		# ok, we got prices, we got player's last turn stock and bank amounts, let's get the value
+		$value_after_last_turn = $before['bank'] +
 				$before[Card::BLUE] * $prices[Card::BLUE] +
 				$before[Card::RED] * $prices[Card::RED] +
 				$before[Card::YELLOW] * $prices[Card::YELLOW] +
 				$before[Card::GREEN] * $prices[Card::GREEN];
 
-		$move_before_value = $before['bank'] +
-				$move->before[Card::BLUE] * $prices[Card::BLUE] +
-				$move->before[Card::RED] * $prices[Card::RED] +
-				$move->before[Card::YELLOW] * $prices[Card::YELLOW] +
-				$move->before[Card::GREEN] * $prices[Card::GREEN];
+		$turn_before_value = $before['bank'] +
+				$turn->before[Card::BLUE] * $prices[Card::BLUE] +
+				$turn->before[Card::RED] * $prices[Card::RED] +
+				$turn->before[Card::YELLOW] * $prices[Card::YELLOW] +
+				$turn->before[Card::GREEN] * $prices[Card::GREEN];
 
-		# Finally let's compare them and if current value is more then the value after last move, then move is invalid
-		if ($move_before_value > $value_after_last_move)
+		# Finally let's compare them and if current value is more then the value after last turn, then turn is invalid
+		if ($turn_before_value > $value_after_last_turn)
 		{
-			throw new InvalidMoveException('Value of stocks purchased before playing the card is higher then user has at the beginning of the move.');
+			throw new InvalidTurnException('Value of stocks purchased before playing the card is higher then player has at the beginning of the turn.');
 		}
 
 		/**
@@ -379,42 +379,42 @@ class Game
 			Price changes must match card definitions
 			Cards must validate price changes and throw exceptions if needed
 		*/
-		$move->card->validatePriceChanges($prices, $move->price_changes, $this->rounding);
+		$turn->card->validatePriceChanges($prices, $turn->price_changes, $this->rounding);
 
 		/**
 			[Rule 3c(4)]
-			Player can't sell more stock then he had before the move
+			Player can't sell more stock then he had before the turn 
 		*/
 		foreach (Card::getColors() as $color)
 		{
-			if ($move->after[$color] < $move->before[$color] && $move->after[$color] - $move->before[$color] > $before[$color])
+			if ($turn->after[$color] < $turn->before[$color] && $turn->after[$color] - $turn->before[$color] > $before[$color])
 			{
-				throw new InvalidMoveException("Amount of ".Card::getColorTitle($color)." stock sold during the move is higher then at the end of user's previous move.");
+				throw new InvalidTurnException("Amount of ".Card::getColorTitle($color)." stock sold during the turn is higher then at the end of player's previous turn.");
 			}
 		}
 
 		/**
 			[Rule 3c(3)]
-			Value of stocks and bank account must be the same right after the prices were changed and at the end of the move
+			Value of stocks and bank account must be the same right after the prices were changed and at the end of the turn 
 		*/
 		$compensation = 0;
 
-		$move_after_value = $before['bank'];
+		$turn_after_value = $before['bank'];
 
 		$prices_after = array();
 		foreach (Card::getColors() as $color)
 		{
-			if (array_key_exists($color, $move->price_changes))
+			if (array_key_exists($color, $turn->price_changes))
 			{
-				$prices_after[$color] = $move->price_changes[$color];
+				$prices_after[$color] = $turn->price_changes[$color];
 
 				/**
 					[Rule 5b]
-					if price went higher then 250, user immediately gets compensation for it being cut
+					if price went higher then 250, player immediately gets compensation for it being cut
 				*/
 				if ($prices_after[$color] > 250)
 				{
-					$compensation += ($prices_after[$color] - 250) * $move->before[$color];
+					$compensation += ($prices_after[$color] - 250) * $turn->before[$color];
 					$prices_after[$color] = 250;
 				}
 
@@ -433,45 +433,45 @@ class Game
 				*/
 				if ($prices[$color] > $prices_after[$color])
 				{
-					$compensation += ($prices[$color] - $prices_after[$color]) * $move->before[$color];
+					$compensation += ($prices[$color] - $prices_after[$color]) * $turn->before[$color];
 				}
 			}
 			else
 			{
 				$prices_after[$color] = $prices[$color];
 			}
-			$move_after_value += $move->before[$color] * $prices_after[$color];
+			$turn_after_value += $turn->before[$color] * $prices_after[$color];
 		}
-		$move_after_value += $compensation;
+		$turn_after_value += $compensation;
 
-		$move_end_value = $move->bank;
+		$turn_end_value = $turn->bank;
 		foreach (Card::getColors() as $color)
 		{
-			$move_end_value += $move->after[$color] * $prices_after[$color];
+			$turn_end_value += $turn->after[$color] * $prices_after[$color];
 		}
 
-		if ($move_after_value != $move_end_value)
+		if ($turn_after_value != $turn_end_value)
 		{
 			/*
 			echo var_export(array(
-				'move' => $move,
+				'turn' => $turn,
 				'before' => $before,
 				'prices_after' => $prices_after,
 				'compensation' => $compensation,
-				'after_value' => $move_after_value,
-				'end_value' => $move_end_value)
+				'after_value' => $turn_after_value,
+				'end_value' => $turn_end_value)
 			);
 			*/
-			throw new InvalidMoveException('Value of stocks and bank account must be the same right after the prices were changed and at the end of the move');
+			throw new InvalidTurnException('Value of stocks and bank account must be the same right after the prices were changed and at the end of the turn');
 		}
 
 		/**
-			[Rule 3b(1)] Check if user plays card that he has and didn't use yet
+			[Rule 3b(1)] Check if player plays card that he has and didn't use yet
 		*/
 		$has_card = false;
 		foreach ($this->playerCards[$playerNumber] as $card)
 		{
-			if ($move->card->equals($card))
+			if ($turn->card->equals($card))
 			{
 				$has_card = true;
 				break;
@@ -486,17 +486,17 @@ class Game
 				$deckLabels[] = $card->toString();
 			}
 
-			echo var_export(array('game' => $this, 'move' => $move));
-			throw new InvalidMoveException("Player can't use a card that wasn't dealt to him: ".$move->card->toString()." (player: $playerNumber; deck: ".implode(', ', $deckLabels).')');
+			echo var_export(array('game' => $this, 'turn' => $turn));
+			throw new InvalidTurnException("Player can't use a card that wasn't dealt to him: ".$turn->card->toString()." (player: $playerNumber; deck: ".implode(', ', $deckLabels).')');
 		}
 
 		$player_cards = $this->playerCards[$playerNumber];
 		#first remove cards that are already played
-		foreach ($this->turns as $turn)
+		foreach ($this->rounds as $round)
 		{
 			for ($i=0; $i<count($player_cards); $i++)
 			{
-				if ($move->card->equals($player_cards[$i]))
+				if ($turn->card->equals($player_cards[$i]))
 				{
 					$player_cards = array_splice($player_cards, $i, 1);
 					break; # once we shortened the array, 
@@ -507,7 +507,7 @@ class Game
 		$still_in_deck = false;
 		foreach ($player_cards as $card)
 		{
-			if ($move->card->equals($card))
+			if ($turn->card->equals($card))
 			{
 				$still_in_deck = true;
 				break;
@@ -516,59 +516,59 @@ class Game
 
 		if (!$still_in_deck)
 		{
-			throw new InvalidMoveException("Player can't use a card that he already used");
+			throw new InvalidTurnException("Player can't use a card that he already used");
 		}
 
 		/** 
-			[Rule 5b] 	Check if other users get correct compensation for >250 rule
+			[Rule 5b] 	Check if other players get correct compensation for >250 rule
 		*/
-		foreach ($move->price_changes as $color => $new_value)
+		foreach ($turn->price_changes as $color => $new_value)
 		{
 			if ($new_value > 250)
 			{
-				# let's cycle through opponent moves and see if they got the compensation
-				for ($i = 0; $i < count($opponent_moves); $i++)
+				# let's cycle through opponent turn and see if they got the compensation
+				for ($i = 0; $i < count($opponent_turns); $i++)
 				{
-					# this user had this stock left in last move
-					if (array_key_exists($color, $opponent_moves[$i]->after))
+					# this player had this stock left in last turn 
+					if (array_key_exists($color, $opponent_turns[$i]->after))
 					{
-						$last_stock_amount = $opponent_moves[$i]->after[$color];
-						$last_bank_balance = $opponent_moves[$i]->bank;
+						$last_stock_amount = $opponent_turns[$i]->after[$color];
+						$last_bank_balance = $opponent_turns[$i]->bank;
 
 						# we need opponent's number in a list of players to reference opponent_changes
 						$opponentNumber = $playerNumber + $i + 1;
 
-						# if $opponent_moves has less entries then $this->getNumberOfPlayers() - 1
-						# it means that we're in the first turn and $opponentNumber should be adjusted accordingly
-						$opponentNumber += $this->getNumberOfPlayers() - 1 - count($opponent_moves);
+						# if $opponent_turns has less entries then $this->getNumberOfPlayers() - 1
+						# it means that we're in the first round and $opponentNumber should be adjusted accordingly
+						$opponentNumber += $this->getNumberOfPlayers() - 1 - count($opponent_turns);
 
 						if ($opponentNumber > $this->getNumberOfPlayers() - 1)
 						{
 							$opponentNumber -= $this->getNumberOfPlayers();
 						}
 
-						# apply changes made by consequent moves if any to see final amount of stock and bank balance !!!
-						# required for games with more then 2 players (more then one opponent move)
-						for ($j = $i+1; $j < count($opponent_moves); $j++)
+						# apply changes made by consequent turns if any to see final amount of stock and bank balance !!!
+						# required for games with more then 2 players (more then one opponent turn)
+						for ($j = $i+1; $j < count($opponent_turns); $j++)
 						{
-							if (array_key_exists($color, $opponent_moves[$j]->opponent_changes[$opponentNumber]))
+							if (array_key_exists($color, $opponent_turns[$j]->opponent_changes[$opponentNumber]))
 							{
-								$last_stock_amount = $opponent_moves[$j]->opponent_changes[$opponentNumber][$color];
+								$last_stock_amount = $opponent_turns[$j]->opponent_changes[$opponentNumber][$color];
 							}
 
-							if (array_key_exists('bank', $opponent_moves[$j]->opponent_changes[$opponentNumber]))
+							if (array_key_exists('bank', $opponent_turns[$j]->opponent_changes[$opponentNumber]))
 							{
-								$last_bank_balance = $opponent_moves[$j]->opponent_changes[$opponentNumber]['bank'];
+								$last_bank_balance = $opponent_turns[$j]->opponent_changes[$opponentNumber]['bank'];
 							}
 						}
 
 						$compensation = $last_stock_amount * ($new_value - 250);
-						$balance_change = $move->opponent_changes[$opponentNumber]['bank'] - $last_bank_balance;
+						$balance_change = $turn->opponent_changes[$opponentNumber]['bank'] - $last_bank_balance;
 						if ($compensation != $balance_change)
 						{
 							/*
 							echo var_export(array(
-								'$opponent_moves' => $opponent_moves,
+								'$opponent_turns' => $opponent_turns,
 								'$opponentNumber' => $opponentNumber,
 								'$compensation' => $compensation,
 								'$i' => $i,
@@ -576,48 +576,48 @@ class Game
 								'$last_stock_amount' => $last_stock_amount,
 								'$last_bank_balance' => $last_bank_balance,
 								'$balance_change' => $balance_change,
-								'$move' => $move
+								'$turn' => $turn
 							));
 							*/
 
-							throw new InvalidMoveException("Player wasn't compensated for stock price going over 250");
+							throw new InvalidTurnException("Player wasn't compensated for stock price going over 250");
 						}
 					}
 				}
-				break; # there can be only one stock that went above 250 in single move
+				break; # there can be only one stock that went above 250 in single turn 
 			}
 		}
 
 		/**
-			[Rule 4(2)] If this is last move, check player didn't buy or sell stocks
+			[Rule 4(2)] If this is last turn, check player didn't buy or sell stocks
 		*/
-		$lastTurnNumber = $playerNumber == 0 ? $this->totalTurns - 1 : $this->totalTurns;
-		if (count($this->turns) == $lastTurnNumber)
+		$lastRoundNumber = $playerNumber == 0 ? $this->totalRounds - 1 : $this->totalRounds;
+		if (count($this->rounds) == $lastRoundNumber)
 		{
 			foreach (Card::getColors() as $color)
 			{
-				if ($move->after[$color] != $move->before[$color] || $move->before[$color] != $before[$color])
+				if ($turn->after[$color] != $turn->before[$color] || $turn->before[$color] != $before[$color])
 				{
-					throw new InvalidMoveException("Player can't buys or sell stock during last turn.");
+					throw new InvalidTurnException("Player can't buys or sell stock during last round.");
 				}
 			}
 		}
 
 		/**
-			Check that move is done by the user who's turn it is
+			Check that turn is done by the player who's round it is
 		*/
-		if (!$this->players[$playerNumber]->compare($move->player))
+		if (!$this->players[$playerNumber]->compare($turn->player))
 		{
-			throw new InvalidMoveException("Wrong player is making the move.");
+			throw new InvalidTurnException("Wrong player is making the turn.");
 		}
 
 		/**
-			[Rule 6] Check if other users' stock and bank amounts get corrected appropriately when going below 10
+			[Rule 6] Check if other players' stock and bank amounts get corrected appropriately when going below 10
 		*/
 
 		# let's get an array of price_changes in order of compensation
 		$price_changes_below10 = array();
-		foreach ($move->price_changes as $color => $new_value)
+		foreach ($turn->price_changes as $color => $new_value)
 		{
 			if ($new_value < 10)
 			{
@@ -628,23 +628,23 @@ class Game
 		krsort($price_changes_below10);
 
 #		echo var_export(array(
-#			'changes' => $move->price_changes,
+#			'changes' => $turn->price_changes,
 #			'below10' => $price_changes_below10
 #		))."\n";
 
 		if (count($price_changes_below10) > 0)
 		{
-			# let's cycle through opponent moves and see if amounts got corrected properly
-			for ($i = 0; $i < count($opponent_moves); $i++)
+			# let's cycle through opponent turns and see if amounts got corrected properly
+			for ($i = 0; $i < count($opponent_turns); $i++)
 			{
-				$bank_left = $opponent_moves[$i]->bank; # will calculate overall compensation for the more
+				$bank_left = $opponent_turns[$i]->bank; # will calculate overall compensation for the more
 
 				# we need opponent's number in a list of players to reference opponent_changes
 				$opponentNumber = $playerNumber + $i + 1;
 
-				# if $opponent_moves has less entries then $this->getNumberOfPlayers() - 1
-				# it means that we're in the first turn and $opponentNumber should be adjusted accordingly
-				$opponentNumber += $this->getNumberOfPlayers() - 1 - count($opponent_moves);
+				# if $opponent_turns has less entries then $this->getNumberOfPlayers() - 1
+				# it means that we're in the first round and $opponentNumber should be adjusted accordingly
+				$opponentNumber += $this->getNumberOfPlayers() - 1 - count($opponent_turns);
 
 				if ($opponentNumber > $this->getNumberOfPlayers() - 1)
 				{
@@ -653,39 +653,39 @@ class Game
 
 				foreach ($price_changes_below10 as $drop => $color)
 				{
-					# this user had this stock left in last move
-					if (array_key_exists($color, $opponent_moves[$i]->after))
+					# this player had this stock left in last turn 
+					if (array_key_exists($color, $opponent_turns[$i]->after))
 					{
-						if ($opponent_moves[$i]->after[$color] < $move->opponent_changes[$opponentNumber][$color])
+						if ($opponent_turns[$i]->after[$color] < $turn->opponent_changes[$opponentNumber][$color])
 						{
-							throw new InvalidMoveException("User didn't have that many stocks before compensation.");
+							throw new InvalidTurnException("Player didn't have that many stocks before compensation.");
 						}
 
-						$bank_left = $bank_left - $move->opponent_changes[$opponentNumber][$color] * $drop;
+						$bank_left = $bank_left - $turn->opponent_changes[$opponentNumber][$color] * $drop;
 
 						if ($bank_left < 0)
 						{
-							throw new InvalidMoveException("Not enough money in the bank to pay off the fee that many stocks.");
+							throw new InvalidTurnException("Not enough money in the bank to pay off the fee that many stocks.");
 						}
 
-						if ($opponent_moves[$i]->after[$color] > $move->opponent_changes[$opponentNumber][$color]
+						if ($opponent_turns[$i]->after[$color] > $turn->opponent_changes[$opponentNumber][$color]
 								&& $bank_left >= $drop)
 						{
-							throw new invalidmoveexception("Must pay off all stocks player has money for.");
+							throw new InvalidTurnException("Must pay off all stocks player has money for.");
 						}
 					}
 				}
 
-				if ($move->opponent_changes[$opponentNumber] != NULL
-					&& $move->opponent_changes[$opponentNumber]['bank'] != $bank_left)
+				if ($turn->opponent_changes[$opponentNumber] != NULL
+					&& $turn->opponent_changes[$opponentNumber]['bank'] != $bank_left)
 				{
 #					echo var_export(array(
 #						'opponent' => $opponentNumber,
-#						'changes' => $move->opponent_changes[$opponentNumber],
+#						'changes' => $turn->opponent_changes[$opponentNumber],
 #						'bank_left' => $bank_left
 #					));
 
-					throw new invalidmoveexception("Bank balances after the fee don't match.");
+					throw new InvalidTurnException("Bank balances after the fee don't match.");
 				}
 			}
 		}
