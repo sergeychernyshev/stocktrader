@@ -72,136 +72,32 @@ class Game
 		}
 	}
 
-	function asFullTableHTML()
-	{
-		$output = '';
-
-		# printing game number
-		$output .= '<div id="gamenumber">';
-		$output .= '<span id="gamenum">'.$this->number.'</span>';
-		$output .= '<span id="gamesuffix">'.$this->suffix.'</span>';
-		$output .= "</div>\n\n";
-
-		# printing players table
-		$output .= '<div id="gameplayers">'."\n";
-		for ($p=0; $p < count($this->players); $p++)
-		{
-			$output .= '<div class="player" id="player'.($p+1).'">';
-			$output .= $this->players[$p]->asString();
-			$output .= "</div>\n";
-		}
-		$output .= "</div>\n\n";
-
-		$totalPlayers = $p;
-
-		$prices = array(
-			Card::BLUE => 100,
-			Card::RED => 100,
-			Card::YELLOW => 100,
-			Card::GREEN => 100,
-		);
-
-		# printing turns 
-		$output .= '<table id="gameturns">';
-		for ($t=0; $t < count($this->turns); $t++)
-		{
-			$turn = $this->turns[$t];
-
-			$output .= "\n<!-- START turn ".($t+1)." -->";
-
-			# printing moves
-			for ($m=0; $m < $totalPlayers; $m++)
-			{
-				$output .= "\n".'<tr class="move player'.($m+1).'move" id="move'.($t+1).'-'.($m+1).'">';
-
-				if ($m == 0)
-				{
-					$output .= '<td class="turnnum" rowspan="'.$totalPlayers.'">'.($t+1)."</td>";
-				}
-
-				$output .= "\n";
-
-				if (array_key_exists($m, $turn))
-				{
-					$move = $turn[$m];
-
-					# printing amounts before
-					$output.= '<td class="blue-before">'.$move->before[Card::BLUE].'</td>';
-					$output.= '<td class="red-before">'.$move->before[Card::RED].'</td>';
-					$output.= '<td class="yellow-before">'.$move->before[Card::YELLOW].'</td>';
-					$output.= '<td class="green-before">'.$move->before[Card::GREEN]."</td>\n";
-
-					# printing card
-					$output.= '<td class="card">'.$move->card->asString()."</td>\n";
-
-					# printing prices
-					foreach (array_keys($move->price_changes) as $color)
-					{
-						$prices[$color] = $move->price_changes[$color];
-					}
-
-					$output.= '<td class="blue-price'.(array_key_exists(Card::BLUE, $move->price_changes) ? ' changed' : '').'">';
-					$output.= $prices[Card::BLUE];
-					$output.= '</td>';
-
-					$output.= '<td class="red-price'.(array_key_exists(Card::RED, $move->price_changes) ? ' changed' : '').'">';
-					$output.= $prices[Card::RED];
-					$output.= '</td>';
-
-					$output.= '<td class="yellow-price'.(array_key_exists(Card::YELLOW, $move->price_changes) ? ' changed' : '').'">';
-					$output.= $prices[Card::YELLOW];
-					$output.= '</td>';
-
-					$output.= '<td class="green-price'.(array_key_exists(Card::GREEN, $move->price_changes) ? ' changed' : '').'">';
-					$output.= $prices[Card::GREEN];
-					$output.= "</td>\n";
-
-					# printing amounts after
-					$blue_after = $move->after[Card::BLUE];
-					$red_after = $move->after[Card::RED];
-					$yellow_after = $move->after[Card::YELLOW];
-					$green_after = $move->after[Card::GREEN];
-
-					# TODO: calculate updates to after amounts made by consequent moves
-					$output.= '<td class="blue-after">'.$blue_after.'</td>';
-					$output.= '<td class="red-after">'.$red_after.'</td>';
-					$output.= '<td class="yellow-after">'.$yellow_after.'</td>';
-					$output.= '<td class="green-after">'.$green_after."</td>\n";
-
-					# TODO: calculate updates to bank balance made by consequent moves
-					$output.= '<td class="bank">'.$move->bank.'</td>';
-				}
-				else
-				{
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-
-					$output.= '<td></td>';
-
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-					$output.= '<td></td>';
-
-					$output.= '<td></td>';
-				}
-
-				
-				$output .= "\n</tr>\n";
-			}
-
-			$output .= "<!-- END turn ".($t+1)." -->\n";
-		}
-		$output .= "</table>\n";
-
-		return $output;
+	public function getNumber() {
+		return $this->number;
+	}
+	public function getSuffix() {
+		return $this->suffix;
+	}
+	public function getPlayers() {
+		return $this->players;
+	}
+	public function getPlayerCards() {
+		return $this->playerCards;
+	}
+	public function getTurns() {
+		return $this->turns;
+	}
+	public function getBigCardsAmount() {
+		return $this->bigCardsAmount;
+	}
+	public function getSmallCardsAmount() {
+		return $this->smallCardsAmount;
+	}
+	public function getTotalTurns() {
+		return $this->totalTurns;
+	}
+	public function isroundingUp() {
+		return $this->rounding;
 	}
 
 	function asString()
