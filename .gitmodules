@@ -1,0 +1,3 @@
+[submodule "UserBase"]
+        path = users
+        url = http://github.com/sergeychernyshev/stocktrader.git
