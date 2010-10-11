@@ -1,6 +1,10 @@
-<? require_once('datamodel/Game.php');
+<?php
+require_once(dirname(__FILE__).'/global.php');
+require_once(dirname(__FILE__).'/datamodel/Game.php');
 
-require_once('archive/1A.php');
+$user = User::require_login();
+
+require_once(dirname(__FILE__).'/archive/1A.php');
 ?>
 <html>
 <head>
@@ -9,7 +13,7 @@ require_once('archive/1A.php');
 
 </head>
 <body>
-<?
+<?php
 echo $game->asFullTableHTML();
 ?>
 </body>

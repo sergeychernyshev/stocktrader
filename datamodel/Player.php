@@ -7,31 +7,33 @@
 #
 # $Id: Player.php 2 2008-02-11 02:52:08Z sergey $
 #
+
+require_once(dirname(dirname(__FILE__)).'/users/users.php');
 class Player
 {
-	private $username;
-	private $name;
-	private $id;
+	private $user;
 
-	function __construct($name, $username, $id)
+	public function __construct($id)
 	{
-		$this->username = $username;
-		$this->name = $name;
-		$this->id = $id;
+		$this->user = User::getUser($id);
 	}
 
-	function asString()
+	public function asString()
 	{
-		return $this->name ? $this->name : $this->username;
+		return $this->user->getName();
 	}
 
-	function compare($user)
+	public function compare($player)
 	{
-		if ($this->id == $user->id)
+		if ($this->user->isTheSameAs($player->getUser()))
 		{
 			return true;
 		}
 
 		return false;
+	}
+
+	public function getUser() {
+		return $this->user;
 	}
 }

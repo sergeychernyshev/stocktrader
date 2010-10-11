@@ -1,4 +1,11 @@
-all:    testcoverage
+all: userbase
+
+userbase:
+	rm -rf __users_export
+	svn export http://svn.github.com/sergeychernyshev/UserBase.git __users_export
+	rm -rf users
+	mv __users_export/users .
+	rm -rf __users_export
 
 test:
 	phpunit tests

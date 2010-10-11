@@ -7,10 +7,10 @@
 #
 # $Id: Game.php 64 2008-05-04 05:03:58Z sergey $
 #
-require_once('SmallCard.php');
-require_once('BigCard.php');
-require_once('Move.php');
-require_once('Player.php');
+require_once(dirname(__FILE__).'/SmallCard.php');
+require_once(dirname(__FILE__).'/BigCard.php');
+require_once(dirname(__FILE__).'/Move.php');
+require_once(dirname(__FILE__).'/Player.php');
 
 class Game
 {
