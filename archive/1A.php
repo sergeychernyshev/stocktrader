@@ -1,8 +1,8 @@
 <?php
 require_once(dirname(dirname(__FILE__)).'/datamodel/Game.php');
 
-$p1 = new Player(51);
-$p2 = new Player(52);
+$p1 = new Player(User::getUser(51));
+$p2 = new Player(User::getUser(52));
 
 $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 	array(

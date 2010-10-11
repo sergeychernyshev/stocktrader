@@ -5,9 +5,9 @@ class GameTest extends PHPUnit_Framework_TestCase
 {
 	public static function gameAndMoveDataProvider()
 	{
-		$p1 = new Player('Sergey Chernyshev', 'sergeychernyshev', 1);
-		$p2 = new Player('Dmitry Roslyakov', 'dr_gonzo', 2);
-		$p3 = new Player('Julia Kononova', 'ukon', 3);
+		$p1 = new Player(new User(1, 'Sergey Chernyshev', 'sergeychernyshev'));
+		$p2 = new Player(new User(2, 'Dmitry Roslyakov', 'dr_gonzo'));
+		$p3 = new Player(new User(3, 'Julia Kononova', 'ukon'));
 
 		$d2px2m = array(
 			array(

@@ -13,9 +13,9 @@ class Player
 {
 	private $user;
 
-	public function __construct($id)
+	public function __construct($user)
 	{
-		$this->user = User::getUser($id);
+		$this->user = $user;
 	}
 
 	public function asString()

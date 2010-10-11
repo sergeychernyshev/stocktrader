@@ -2,12 +2,12 @@
 require_once(dirname(__FILE__).'/global.php');
 UserConfig::setDB($db);
 
-if ($facebookAPIKey) {
+if (isset($facebookAPIKey)) {
 	require_once(dirname(__FILE__).'/users/modules/facebook/index.php');
 	UserConfig::$modules[] = new FacebookAuthenticationModule($facebookAPIKey, $facebookSecret);
 }
 
-if ($googleFriendConnectSiteID) {
+if (isset($googleFriendConnectSiteID)) {
 	require_once(dirname(__FILE__).'/users/modules/google/index.php');
 	UserConfig::$modules[] = new GoogleAuthenticationModule($googleFriendConnectSiteID);
 }
