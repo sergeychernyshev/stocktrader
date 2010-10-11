@@ -8,12 +8,12 @@ class SmallCardTest extends PHPUnit_Framework_TestCase
                 return array(
                         array(
 				array(Card::BLUE => 130, Card::RED => 40, Card::YELLOW => 100, Card::GREEN => 50),
-				new SmallCard(+30, Card::BLUE),
+				Card::getCard(1), // +30 Blue
 				array(Card::BLUE => 160, Card::YELLOW => 40)
 			),
                         array(
 				array(Card::BLUE => 130, Card::RED => 40, Card::YELLOW => 100, Card::GREEN => 50),
-				new SmallCard(+30, Card::BLUE),
+				Card::getCard(1), // +30 Blue
 				array(Card::BLUE => 160, Card::YELLOW => 50),
 				'InvalidPriceChangeException'				
 			)

@@ -7,47 +7,57 @@
 #
 # $Id: BigCard.php 2 2008-02-11 02:52:08Z sergey $
 #
-require_once('Card.php');
-require_once('Deck.php');
+require_once(dirname(__FILE__).'/Card.php');
 
 abstract class BigCard extends Card
 {
-	# static initializer for the deck - must be called at the top of this file
-	static function getDeck()
+	public static $deck;
+
+	public static function getDeck() {
+		return self::$deck;
+	}
+
+	# static initializer for the deck - must be called at the bottom of this file
+	public static function createDeck()
 	{
-		return new Deck(array(
-			new Hundred(Card::BLUE),
-			new Hundred(Card::BLUE),
-			new Hundred(Card::BLUE),
-			new MultiplyBy2(Card::BLUE),
-			new DivideBy2(Card::BLUE),
-		
-			new Hundred(Card::RED),
-			new Hundred(Card::RED),
-			new Hundred(Card::RED),
-			new MultiplyBy2(Card::RED),
-			new DivideBy2(Card::RED),
-		
-			new Hundred(Card::YELLOW),
-			new Hundred(Card::YELLOW),
-			new Hundred(Card::YELLOW),
-			new MultiplyBy2(Card::YELLOW),
-			new DivideBy2(Card::YELLOW),
-		
-			new Hundred(Card::GREEN),
-			new Hundred(Card::GREEN),
-			new Hundred(Card::GREEN),
-			new MultiplyBy2(Card::GREEN),
-			new DivideBy2(Card::GREEN)
-		));
+		if (is_null(self::$deck)) {
+			self::$deck = new Deck(array(
+				new Hundred(33,		Card::BLUE),
+				new Hundred(34,		Card::BLUE),
+				new Hundred(35,		Card::BLUE),
+				new MultiplyBy2(36,	Card::BLUE),
+				new DivideBy2(37,	Card::BLUE),
+			
+				new Hundred(38,		Card::RED),
+				new Hundred(39,		Card::RED),
+				new Hundred(40,		Card::RED),
+				new MultiplyBy2(41,	Card::RED),
+				new DivideBy2(42,	Card::RED),
+			
+				new Hundred(43,		Card::YELLOW),
+				new Hundred(44,		Card::YELLOW),
+				new Hundred(45,		Card::YELLOW),
+				new MultiplyBy2(46,	Card::YELLOW),
+				new DivideBy2(47,	Card::YELLOW),
+			
+				new Hundred(48,		Card::GREEN),
+				new Hundred(49,		Card::GREEN),
+				new Hundred(50,		Card::GREEN),
+				new MultiplyBy2(51,	Card::GREEN),
+				new DivideBy2(52,	Card::GREEN)
+			));
+		}
 	}
 }
 
 class Hundred extends BigCard
 {
-	function Hundred($color)
+	function __construct($id, $color)
 	{
+		$this->id = $id;
 		$this->color = $color;
+
+		Card::addCard($this);
 	}
 
 	function validatePriceChanges($original_prices, $price_changes)
@@ -112,9 +122,12 @@ class Hundred extends BigCard
 
 class MultiplyBy2 extends BigCard
 {
-	function MultiplyBy2($color)
+	function __construct($id, $color)
 	{
+		$this->id = $id;
 		$this->color = $color;
+
+		Card::addCard($this);
 	}
 
 	function validatePriceChanges($original_prices, $price_changes, $rounding = true)
@@ -177,9 +190,12 @@ class MultiplyBy2 extends BigCard
 
 class DivideBy2 extends BigCard
 {
-	function DivideBy2($color)
+	function __construct($id, $color)
 	{
+		$this->id = $id;
 		$this->color = $color;
+
+		Card::addCard($this);
 	}
 
 	function validatePriceChanges($original_prices, $price_changes, $rounding = true)
@@ -239,3 +255,4 @@ class DivideBy2 extends BigCard
 		return 10000 + 1000*$this->color + 1;
 	}
 }
+BigCard::createDeck();

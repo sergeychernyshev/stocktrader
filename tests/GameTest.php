@@ -11,58 +11,58 @@ class GameTest extends PHPUnit_Framework_TestCase
 
 		$d2px2m = array(
 			array(
-				new SmallCard(+30, Card::BLUE),
-				new MultiplyBy2(Card::GREEN)
+				Card::getCard(1), // +30 Blue
+				Card::getCard(51) // *2 Green
 			),
 			array(
-				new SmallCard(-30, Card::RED),
-				new DivideBy2(Card::GREEN)
+				Card::getCard(18), // -30 Red
+				Card::getCard(52)  // :2 Green
 			)
 		); 
 
 
 		$d2 = array(
 			array(
-				new SmallCard(+30, Card::BLUE),
-				new SmallCard(+60, Card::RED),
-				new SmallCard(+40, Card::YELLOW),
-				new SmallCard(+50, Card::GREEN),
-				new SmallCard(+60, Card::BLUE),
-				new SmallCard(-30, Card::GREEN),
+				Card::getCard(1),  // +30 Blue
+				Card::getCard(14), // +60 Red
+				Card::getCard(7),  // +40 Yellow
+				Card::getCard(12), // +50 Green
+				Card::getCard(13), // +60 Blue
+				Card::getCard(20), // -30 Green
 
-				new Hundred(Card::BLUE),
-				new Hundred(Card::BLUE),
-				new MultiplyBy2(Card::BLUE),
-				new DivideBy2(Card::RED)
+				Card::getCard(33), // 100 Blue
+				Card::getCard(34), // 100 Blue
+				Card::getCard(36), // *2 Blue
+				Card::getCard(42)  // :2 Red
 			),
 			array(
-				new SmallCard(-30, Card::RED),
-				new SmallCard(-60, Card::RED),
-				new SmallCard(-40, Card::YELLOW),
-				new SmallCard(-50, Card::GREEN),
-				new SmallCard(-60, Card::BLUE),
-				new SmallCard(+30, Card::GREEN),
+				Card::getCard(18), // -30 Red
+				Card::getCard(30), // -60 Red
+				Card::getCard(23), // -40 Yellow
+				Card::getCard(28), // -50 Green
+				Card::getCard(29), // -60 Blue
+				Card::getCard(4),  // +30 Green
 
-				new Hundred(Card::BLUE),
-				new Hundred(Card::RED),
-				new MultiplyBy2(Card::GREEN),
-				new DivideBy2(Card::BLUE)
+				Card::getCard(33), // 100 Blue
+				Card::getCard(38), // 100 Red
+				Card::getCard(51), // *2 Green
+				Card::getCard(37)  // :2 Blue
 			)
 		); 
 
 		$d3 = array($d2[0], $d2[1],
 			array(
-				new SmallCard(-30, Card::BLUE),
-				new SmallCard(-60, Card::BLUE),
-				new SmallCard(-40, Card::RED),
-				new SmallCard(-50, Card::YELLOW),
-				new SmallCard(-60, Card::GREEN),
-				new SmallCard(+30, Card::RED),
+				Card::getCard(17), // -30 Blue
+				Card::getCard(29), // -60 Blue
+				Card::getCard(22), // -40 Red
+				Card::getCard(27), // -50 Yellow
+				Card::getCard(32), // -60 Green
+				Card::getCard(2),  // +30 Red
 
-				new Hundred(Card::GREEN),
-				new Hundred(Card::RED),
-				new MultiplyBy2(Card::YELLOW),
-				new DivideBy2(Card::YELLOW)
+				Card::getCard(48), // 100 Green
+				Card::getCard(38), // 100 Red
+				Card::getCard(46), // *2 Yellow
+				Card::getCard(47)  // :2 Yellow
 			)
 		);
 
@@ -73,7 +73,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+30, Card::BLUE),
+					Card::getCard(1), // +30 Blue
 					array(Card::BLUE => 130, Card::RED => 40),
 					array(Card::BLUE => 0, Card::RED => 8, Card::YELLOW => 0, Card::GREEN => 1),
 					10,
@@ -86,7 +86,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 2, Card::RED => 0, Card::YELLOW => 0, Card::GREEN => 2),
-					new SmallCard(+30, Card::BLUE),
+					Card::getCard(1), // +30 Blue
 					array(Card::BLUE => 130, Card::RED => 40),
 					array(Card::BLUE => 1, Card::RED => 3, Card::YELLOW => 1, Card::GREEN => 1),
 					10,
@@ -100,7 +100,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -111,7 +111,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(-30, Card::RED),
+					Card::getCard(18), // -30 Red
 					array(Card::RED => 10, Card::YELLOW => 160),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					30,
@@ -124,7 +124,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 2, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+30, Card::BLUE),
+					Card::getCard(1), // +30 Blue
 					array(Card::BLUE => 130, Card::RED => 40),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					0,
@@ -139,7 +139,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -148,7 +148,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -159,7 +159,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 0, Card::RED => 36, Card::YELLOW => 0, Card::GREEN => 1),
-					new SmallCard(+60, Card::RED),
+					Card::getCard(14), // +60 Red
 					array(Card::RED => 70, Card::YELLOW => 130),
 					array(Card::BLUE => 0, Card::RED => 0, Card::YELLOW => 0, Card::GREEN => 26),
 					20,
@@ -174,7 +174,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -185,7 +185,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new DivideBy2(Card::BLUE),
+					Card::getCard(37),  // :2 Blue
 					array(Card::BLUE => 70, Card::RED => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -199,7 +199,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -210,7 +210,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new DivideBy2(Card::BLUE),
+					Card::getCard(37),  // :2 Blue
 					array(Card::BLUE => 60, Card::RED => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					70,
@@ -225,7 +225,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -236,7 +236,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new DivideBy2(Card::BLUE),
+					Card::getCard(37),  // :2 Blue
 					array(Card::BLUE => 60, Card::RED => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					70,
@@ -250,7 +250,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -261,7 +261,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new DivideBy2(Card::BLUE),
+					Card::getCard(37),  // :2 Blue
 					array(Card::BLUE => 70, Card::RED => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -276,7 +276,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new DivideBy2(Card::RED),
+							Card::getCard(42),  // :2 Red
 							array(Card::GREEN => 200, Card::RED => 50),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							50,
@@ -287,7 +287,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new MultiplyBy2(Card::GREEN),
+					Card::getCard(51), // *2 Green
 					array(Card::GREEN => 400, Card::BLUE => 50),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					200,
@@ -304,7 +304,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new DivideBy2(Card::RED),
+							Card::getCard(42),  // :2 Red
 							array(Card::GREEN => 200, Card::RED => 50),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							50,
@@ -313,7 +313,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new MultiplyBy2(Card::GREEN),
+							Card::getCard(51), // *2 Green
 							array(Card::GREEN => 400, Card::BLUE => 50),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							200,
@@ -328,7 +328,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p3,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new DivideBy2(Card::YELLOW),
+					Card::getCard(47),  // :2 Yellow
 					array(Card::GREEN => 500, Card::YELLOW => 50),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					450,
@@ -346,7 +346,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -355,7 +355,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -366,7 +366,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new MultiplyBy2(Card::GREEN),
+					Card::getCard(51), // *2 Green
 					array(Card::GREEN => 200, Card::YELLOW => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					140,
@@ -380,7 +380,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -389,7 +389,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -400,7 +400,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new MultiplyBy2(Card::GREEN),
+					Card::getCard(51), // *2 Green
 					array(Card::GREEN => 200, Card::YELLOW => 80),
 					array(Card::BLUE => 1, Card::RED => 15, Card::YELLOW => 1, Card::GREEN => 1),
 					0,
@@ -415,7 +415,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -424,7 +424,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -433,7 +433,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new MultiplyBy2(Card::GREEN),
+							Card::getCard(51), // *2 Green
 							array(Card::GREEN => 200, Card::YELLOW => 80),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							140,
@@ -442,7 +442,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new DivideBy2(Card::GREEN),
+							Card::getCard(52),  // :2 Green
 							array(Card::GREEN => 100, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							130,
@@ -453,7 +453,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new MultiplyBy2(Card::GREEN),
+					Card::getCard(51), // *2 Green
 					array(Card::GREEN => 200, Card::YELLOW => 80),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					140,
@@ -467,7 +467,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p2,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+30, Card::BLUE),
+					Card::getCard(1), // +30 Blue
 					array(Card::BLUE => 130, Card::RED => 40),
 					array(Card::BLUE => 0, Card::RED => 8, Card::YELLOW => 0, Card::GREEN => 1),
 					10,
@@ -482,7 +482,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -491,7 +491,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -502,7 +502,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -522,7 +522,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -531,7 +531,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -542,7 +542,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -563,7 +563,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -572,7 +572,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -583,7 +583,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -604,7 +604,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -613,7 +613,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							30,
@@ -624,7 +624,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -645,7 +645,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -654,7 +654,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 17, Card::YELLOW => 0, Card::GREEN => 1),
 							30,
@@ -665,7 +665,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,
@@ -686,7 +686,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p1,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(+30, Card::BLUE),
+							Card::getCard(1), // +30 Blue
 							array(Card::BLUE => 130, Card::RED => 40),
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 							60,
@@ -695,7 +695,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 						new Turn(
 							$p2,
 							array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-							new SmallCard(-30, Card::RED),
+							Card::getCard(18), // -30 Red
 							array(Card::RED => 10, Card::YELLOW => 160),
 							array(Card::BLUE => 1, Card::RED => 17, Card::YELLOW => 0, Card::GREEN => 1),
 							30,
@@ -706,7 +706,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				new Turn(
 					$p1,
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-					new SmallCard(+60, Card::BLUE),
+					Card::getCard(13), // +60 Blue
 					array(Card::BLUE => 190, Card::RED => -20),
 					array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 					60,

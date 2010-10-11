@@ -7,16 +7,21 @@
 #
 # $Id: SmallCard.php 2 2008-02-11 02:52:08Z sergey $
 #
-require_once('Card.php');
+require_once(dirname(__FILE__).'/Card.php');
 
 class SmallCard extends Card
 {
+	public static $deck;
+
 	private $value;
 
-	function SmallCard($value, $color)
+	function SmallCard($id, $value, $color)
 	{
+		$this->id = $id;
 		$this->value = $value;
 		$this->color = $color;
+
+		Card::addCard($this);
 	}
 
 	function getSortIndex()
@@ -64,43 +69,50 @@ class SmallCard extends Card
 		return ($this->value > 0 ? '+'.$this->value : $this->value).$this->getCardColorLetter();
 	}
 
-	# static initializer for the deck - must be called at the top of this file
-	static function getDeck()
-	{
-		return new Deck(array(
-			new SmallCard(+30, Card::BLUE),
-			new SmallCard(+30, Card::RED),
-			new SmallCard(+30, Card::YELLOW),
-			new SmallCard(+30, Card::GREEN),
-			new SmallCard(+40, Card::BLUE),
-			new SmallCard(+40, Card::RED),
-			new SmallCard(+40, Card::YELLOW),
-			new SmallCard(+40, Card::GREEN),
-			new SmallCard(+50, Card::BLUE),
-			new SmallCard(+50, Card::RED),
-			new SmallCard(+50, Card::YELLOW),
-			new SmallCard(+50, Card::GREEN),
-			new SmallCard(+60, Card::BLUE),
-			new SmallCard(+60, Card::RED),
-			new SmallCard(+60, Card::YELLOW),
-			new SmallCard(+60, Card::GREEN),
+	public static function getDeck() {
+		return self::$deck;
+	}
 
-			new SmallCard(-30, Card::BLUE),
-			new SmallCard(-30, Card::RED),
-			new SmallCard(-30, Card::YELLOW),
-			new SmallCard(-30, Card::GREEN),
-			new SmallCard(-40, Card::BLUE),
-			new SmallCard(-40, Card::RED),
-			new SmallCard(-40, Card::YELLOW),
-			new SmallCard(-40, Card::GREEN),
-			new SmallCard(-50, Card::BLUE),
-			new SmallCard(-50, Card::RED),
-			new SmallCard(-50, Card::YELLOW),
-			new SmallCard(-50, Card::GREEN),
-			new SmallCard(-60, Card::BLUE),
-			new SmallCard(-60, Card::RED),
-			new SmallCard(-60, Card::YELLOW),
-			new SmallCard(-60, Card::GREEN)
-		));
+	# static initializer for the deck - must be called at the bottom of this file
+	public static function createDeck()
+	{
+		if (is_null(self::$deck)) {
+			self::$deck = new Deck(array(
+				new SmallCard(1,	+30,	Card::BLUE),
+				new SmallCard(2,	+30,	Card::RED),
+				new SmallCard(3,	+30,	Card::YELLOW),
+				new SmallCard(4,	+30,	Card::GREEN),
+				new SmallCard(5,	+40,	Card::BLUE),
+				new SmallCard(6,	+40,	Card::RED),
+				new SmallCard(7,	+40,	Card::YELLOW),
+				new SmallCard(8,	+40,	Card::GREEN),
+				new SmallCard(9,	+50,	Card::BLUE),
+				new SmallCard(10,	+50,	Card::RED),
+				new SmallCard(11,	+50,	Card::YELLOW),
+				new SmallCard(12,	+50,	Card::GREEN),
+				new SmallCard(13,	+60,	Card::BLUE),
+				new SmallCard(14,	+60,	Card::RED),
+				new SmallCard(15,	+60,	Card::YELLOW),
+				new SmallCard(16,	+60,	Card::GREEN),
+
+				new SmallCard(17,	-30,	Card::BLUE),
+				new SmallCard(18,	-30,	Card::RED),
+				new SmallCard(19,	-30,	Card::YELLOW),
+				new SmallCard(20,	-30,	Card::GREEN),
+				new SmallCard(21,	-40,	Card::BLUE),
+				new SmallCard(22,	-40,	Card::RED),
+				new SmallCard(23,	-40,	Card::YELLOW),
+				new SmallCard(24,	-40,	Card::GREEN),
+				new SmallCard(25,	-50,	Card::BLUE),
+				new SmallCard(26,	-50,	Card::RED),
+				new SmallCard(27,	-50,	Card::YELLOW),
+				new SmallCard(28,	-50,	Card::GREEN),
+				new SmallCard(29,	-60,	Card::BLUE),
+				new SmallCard(30,	-60,	Card::RED),
+				new SmallCard(31,	-60,	Card::YELLOW),
+				new SmallCard(32,	-60,	Card::GREEN)
+			));
+		}
 	}
 }
+SmallCard::createDeck();

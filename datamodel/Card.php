@@ -7,8 +7,9 @@
 #
 # $Id: Card.php 2 2008-02-11 02:52:08Z sergey $
 #
-require_once('SmallCard.php');
-require_once('BigCard.php');
+require_once(dirname(__FILE__).'/Deck.php');
+require_once(dirname(__FILE__).'/SmallCard.php');
+require_once(dirname(__FILE__).'/BigCard.php');
 
 abstract class Card
 {
@@ -26,7 +27,22 @@ abstract class Card
 			Card::GREEN => array( 'letter' => 'g', 'title' => 'green' )
 		);
 
+	var $id;
 	var $color;
+
+	private static $cards = array();
+
+	public static function addCard($card) {
+		self::$cards[$card->getId()] = $card;
+	}
+
+	public static function getCard($id) {
+		return self::$cards[$id]; 
+	}
+
+	function getId() {
+		return $this->id;
+	}
 
 	function getCardColorLetter()
 	{

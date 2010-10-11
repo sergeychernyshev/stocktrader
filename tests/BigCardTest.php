@@ -8,7 +8,7 @@ class BigCardTest extends PHPUnit_Framework_TestCase
                 return array(
                         array(
 				array(Card::BLUE => 130, Card::RED => 40, Card::YELLOW => 100, Card::GREEN => 50),
-				new Hundred(Card::BLUE),
+				Card::getCard(33), // Blue Hundred
 				array(Card::BLUE => 230, Card::RED => 10, Card::YELLOW => 80, Card::GREEN => 40),
 			),
                 );
