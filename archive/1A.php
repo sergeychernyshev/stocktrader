@@ -7,19 +7,19 @@ $p2 = new Player(User::getUser(52));
 $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 	array(
 		array(
-			new SmallCard(+30, Card::BLUE),
-			new MultiplyBy2(Card::GREEN)
+			Card::getCard(1), // +30 Blue
+			Card::getCard(51), // *2 Green
 		),
 		array(
-			new SmallCard(-30, Card::RED),
-			new DivideBy2(Card::GREEN)
+			Card::getCard(18), // -30 Red
+			Card::getCard(52)  // :2 Green
 		)
 	),
 	array(
 		new Turn(
 			$p1,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-			new SmallCard(+30, Card::BLUE),
+			Card::getCard(1), // +30 Blue
 			array(Card::BLUE => 130, Card::RED => 40),
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			60,
@@ -28,7 +28,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 		new Turn(
 			$p2,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-			new SmallCard(-30, Card::RED),
+			Card::getCard(18), // -30 Red
 			array(Card::RED => 10, Card::YELLOW => 160),
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			30,
@@ -37,7 +37,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 		new Turn(
 			$p1,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-			new MultiplyBy2(Card::GREEN),
+			Card::getCard(51), // *2 Green
 			array(Card::GREEN => 200, Card::YELLOW => 80),
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			140,
@@ -46,7 +46,7 @@ $game = new Game(1, 'A', array($p1, $p2), 1, 1, true,
 		new Turn(
 			$p2,
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
-			new DivideBy2(Card::GREEN),
+			Card::getCard(52),  // :2 Green
 			array(Card::GREEN => 100, Card::YELLOW => 160),
 			array(Card::BLUE => 1, Card::RED => 1, Card::YELLOW => 1, Card::GREEN => 1),
 			130,
