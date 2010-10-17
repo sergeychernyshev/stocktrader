@@ -1,0 +1,6 @@
+[submodule "users"]
+	path = users
+	url = http://github.com/sergeychernyshev/UserBase.git
+[submodule "dbupgrade"]
+	path = dbupgrade
+	url = http://github.com/sergeychernyshev/DBUpgrade.git
