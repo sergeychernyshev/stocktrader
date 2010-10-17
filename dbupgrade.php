@@ -58,7 +58,7 @@ $versions[1]['down'][] = "DROP TABLE `opponent_changes`";
 $versions[1]['up'][] = "CREATE TABLE `player` (
   `player_id` bigint(10) unsigned NOT NULL COMMENT 'Player ID',
   `user_id` bigint(10) unsigned NOT NULL COMMENT 'Player User''s ID'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Mapping between users and players'"
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Mapping between users and players'";
 $versions[1]['down'][] = "DROP TABLE `player`";
 
 $versions[1]['up'][] = "CREATE TABLE `turn` (
