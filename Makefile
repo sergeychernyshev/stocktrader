@@ -1,4 +1,5 @@
 all:	.svn .git updatedb
+	cd users && $(MAKE)
 
 # if we don't have .git folder, let's assume we use SVN export
 .git:
@@ -19,7 +20,7 @@ all:	.svn .git updatedb
 
 # and vice versa (below is for git)
 .svn:
-	git pull
+	git pull origin master
 	git submodule init
 	git submodule update
 
