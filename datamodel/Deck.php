@@ -31,7 +31,8 @@ class Deck
 
 		for ($i = 0; $i<$amount; $i++)
 		{
-			$deal[] = array_shift(array_splice($this->cards, rand(0, count($this->cards)-1), 1));
+			$taken_card_in_array = array_splice($this->cards, rand(0, count($this->cards)-1), 1);
+			$deal[] = $taken_card_in_array[0];
 		}
 
 		return $deal;
