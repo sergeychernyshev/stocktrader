@@ -84,7 +84,9 @@ abstract class Card
 		return $card->asString() == $this->asString(); # simple implementation
 	}
 
-	abstract static function getDeck();
+	# Well, it looks like abstract static is hard for PHP to standardise on at the moment
+	# make sure to implement a static method to get particular type of deck
+	//abstract static function getDeck();
 
 	# returns sort index for the card - used when a list of cards is printed
 	abstract function getSortIndex();
