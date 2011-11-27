@@ -1,3 +1,6 @@
 [submodule "dbupgrade"]
 	path = dbupgrade
 	url = http://github.com/sergeychernyshev/DBUpgrade.git
+[submodule "users"]
+	path = users
+	url = git://github.com/StartupAPI/users.git

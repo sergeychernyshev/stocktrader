@@ -7,9 +7,27 @@
  *       requirements for the database structure.
 */
 require_once(dirname(__FILE__).'/dbupgrade/lib.php');
+require_once(dirname(__FILE__).'/global.php');
+require_once(dirname(__FILE__).'/users/users.php');
 
 $versions = array();
 // Add new migrations on top, right below this line.
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 2
+ * Player table should have a primary and foreign keys
+*/
+$versions[2]['up'][] = "ALTER TABLE `player` ADD PRIMARY KEY (  `player_id` )";
+$versions[2]['up'][] = "ALTER TABLE `player` MODIFY user_id INT(10) UNSIGNED NOT NULL";
+$versions[2]['up'][] = "ALTER TABLE `player` ADD UNIQUE unique_user(`user_id`)";
+$versions[2]['up'][] = "ALTER TABLE `player` ADD CONSTRAINT player_user
+                                FOREIGN KEY player_user(user_id)
+                                REFERENCES ".UserConfig::$mysql_prefix."users(id)
+				ON UPDATE CASCADE ON DELETE CASCADE";
+
+$versions[2]['down'][] = "ALTER TABLE `player` DROP FOREIGN KEY player_user"; 
+$versions[2]['down'][] = "ALTER TABLE `player` DROP INDEX unique_user"; 
+$versions[2]['down'][] = "ALTER TABLE `player` MODIFY user_id BIGINT(10) UNSIGNED NOT NULL";
+$versions[2]['down'][] = "ALTER TABLE `player` DROP PRIMARY KEY";
 
 /* -------------------------------------------------------------------------------------------------------
  * VERSION 1
@@ -80,9 +98,7 @@ $versions[1]['up'][] = "CREATE TABLE `turn` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Game rturn information'";
 $versions[1]['down'][] = "DROP TABLE `turn`";
 
-
 // creating DBUpgrade object with your database credentials and $versions defined above
-require_once(dirname(__FILE__).'/global.php');
 $dbupgrade = new DBUpgrade($db, $versions);
 
 require_once(dirname(__FILE__).'/dbupgrade/client.php');
