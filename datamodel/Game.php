@@ -14,6 +14,9 @@ require_once(dirname(__FILE__).'/Player.php');
 
 class Game
 {
+	# database ID
+	private $id;
+
 	# game number and suffix
 	private $number;
 	private $suffix; # A, B, C, D and etc.
@@ -39,8 +42,10 @@ class Game
 	# rounding up (or down) if :2 is used
 	private $rounding;
 
-	function __construct($number, $suffix, $players, $bigCardsAmount = 4, $smallCardsAmount = 6, $rounding = true, $decks = null, $turns = null)
+	function __construct($number, $suffix, $players, $bigCardsAmount = 4, $smallCardsAmount = 6, $rounding = true, $decks = null, $turns = null, $id = null)
 	{
+		$this->id = $id;
+
 		$this->number = $number;
 		$this->suffix = $suffix;
 		$this->players = $players;
@@ -72,6 +77,9 @@ class Game
 		}
 	}
 
+	public function getID() {
+		return $this->id;
+	}
 	public function getNumber() {
 		return $this->number;
 	}
@@ -483,11 +491,11 @@ class Game
 			$deckLabels = array();
 			foreach ($this->playerCards[$playerNumber] as $card)
 			{
-				$deckLabels[] = $card->toString();
+				$deckLabels[] = $card->asString();
 			}
 
-			echo var_export(array('game' => $this, 'turn' => $turn));
-			throw new InvalidTurnException("Player can't use a card that wasn't dealt to him: ".$turn->card->toString()." (player: $playerNumber; deck: ".implode(', ', $deckLabels).')');
+			// echo var_export(array('game' => $this, 'turn' => $turn));
+			throw new InvalidTurnException("Player can't use a card that wasn't dealt to him: ".$turn->card->asString()." (player: $playerNumber; deck: ".implode(', ', $deckLabels).')');
 		}
 
 		$player_cards = $this->playerCards[$playerNumber];
@@ -691,6 +699,116 @@ class Game
 		}
 
 		return true;
+	}
+
+	// methods for DB connectivity
+	public static function getPlayerGames($player) {
+		global $db;
+
+		$game_data = array();
+
+		if ($stmt = $db->prepare('SELECT
+				id,
+				number,
+				suffix,
+				big_cards_amount,
+				small_cards_amount,
+				rounding_up,
+				gpp.player_id
+			FROM game g
+			INNER JOIN game_players gp ON g.id = gp.game_id
+			INNER JOIN game_players gpp ON g.id = gpp.game_id
+			WHERE gp.player_id = ?
+			ORDER BY number, suffix, gpp.move_order
+			'))
+		{
+			$player_id = $player->getID();
+
+			if (!$stmt->bind_param('i', $player_id))
+			{
+				 throw new Exception("Can't bind parameter".$stmt->error);
+			}
+			if (!$stmt->execute())
+			{
+				throw new Exception("Can't execute statement: ".$stmt->error);
+			}
+			if (!$stmt->bind_result(
+				$id,
+				$number,
+				$suffix,
+				$big_cards_amount,
+				$small_cards_amount,
+				$rounding_up,
+				$player_id))
+			{
+				throw new Exception("Can't bind result: ".$stmt->error);
+			}
+
+			while($stmt->fetch() === TRUE) {
+				if (array_key_exists($id, $game_data)) {
+					$game_data[$id]['players'][] = new Player(null, $player_id);
+				} else {
+					$game_data[$id] = array(
+						'number' => $number,
+						'suffix' => $suffix,
+						'players' => array(
+							new Player(null, $player_id)
+						),
+						'big_cards_amount' => $big_cards_amount,
+						'small_cards_amount' => $small_cards_amount,
+						'rounding_up' => $rounding_up ? true : false
+					);
+				}
+			}
+			$stmt->close();
+		}
+		else
+		{
+			throw new Exception("Can't prepare statement: ".$db->error);
+		}
+
+		$game_decks = array();
+
+		if ($stmt = $db->prepare('SELECT game_id, player_number, card_id
+			FROM game_player_cards
+			WHERE game_id IN ('.implode(', ', array_keys($game_data)).')'))
+		{
+			if (!$stmt->execute())
+			{
+				throw new Exception("Can't execute statement: ".$stmt->error);
+			}
+			if (!$stmt->bind_result($game_id, $player_number, $card_id))
+			{
+				throw new Exception("Can't bind result: ".$stmt->error);
+			}
+
+			while($stmt->fetch() === TRUE) {
+				$game_decks[$game_id][$player_number][] = Card::getCard($card_id);
+			}
+			$stmt->close();
+		}
+		else
+		{
+			throw new Exception("Can't prepare statement: ".$db->error);
+		}
+
+		$games = array();
+
+		foreach ($game_data as $id => $data) {
+			$games[] = new Game(
+				$data['number'],
+				$data['suffix'],
+				$data['players'],
+				$data['big_cards_amount'],
+				$data['small_cards_amount'],
+				$data['rounding_up'],
+				$game_decks[$id],
+				null,
+				$id
+			);
+		}
+
+		return $games;
 	}
 }
 

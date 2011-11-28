@@ -43,7 +43,7 @@ class SmallCard extends Card
 
 		if (count($price_changes) != 2)
 		{
-			throw new InvalidPriceChangeException('Small card changes price for two colors');
+			throw new InvalidPriceChangeException('Small card always changes price for exactly two colors');
 		}	
 
 		$other_color_change = (90 - abs($this->value)) * ($this->value > 0 ? -1 : 1);

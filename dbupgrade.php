@@ -12,6 +12,64 @@ require_once(dirname(__FILE__).'/users/users.php');
 
 $versions = array();
 // Add new migrations on top, right below this line.
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 6
+ * Each of changes to opponent's content is optional,
+ * But only one or zero sets per player can be recorded for a turn
+*/
+$versions[6]['up'][] = "ALTER TABLE opponent_changes
+MODIFY blue_change TINYINT(1) UNSIGNED NULL COMMENT 'New amount of blue stocks',
+MODIFY red_change TINYINT(1) UNSIGNED NULL COMMENT 'New amount of red stocks',
+MODIFY yellow_change TINYINT(1) UNSIGNED NULL COMMENT 'New amount of yellow stocks',
+MODIFY green_change TINYINT(1) UNSIGNED NULL COMMENT 'New amount of green stocks',
+MODIFY bank_change BIGINT(10) UNSIGNED NULL COMMENT 'New amount in the bank'";
+$versions[6]['up'][] = "ALTER TABLE opponent_changes ADD PRIMARY KEY (turn_id, player_number)";
+
+$versions[6]['down'][] = "ALTER TABLE opponent_changes DROP PRIMARY KEY";
+$versions[6]['down'][] = "ALTER TABLE opponent_changes
+MODIFY blue_change TINYINT(1) UNSIGNED NOT NULL COMMENT 'New amount of blue stocks',
+MODIFY red_change TINYINT(1) UNSIGNED NOT NULL COMMENT 'New amount of red stocks',
+MODIFY yellow_change TINYINT(1) UNSIGNED NOT NULL COMMENT 'New amount of yellow stocks',
+MODIFY green_change TINYINT(1) UNSIGNED NOT NULL COMMENT 'New amount of green stocks',
+MODIFY bank_change BIGINT(10) UNSIGNED NOT NULL COMMENT 'New amount in the bank'";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 5
+ * Same card can't be dealt twice in one game
+*/
+$versions[5]['up'][] = "ALTER TABLE game_player_cards ADD PRIMARY KEY (game_id, card_id)";
+
+$versions[5]['down'][] = "ALTER TABLE game_player_cards DROP PRIMARY KEY";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 4
+ * Prices can change to up to 500 (before trimming)
+*/
+$versions[4]['up'][] = "ALTER TABLE turn
+MODIFY blue_change SMALLINT(2) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for blue shares',
+MODIFY red_change SMALLINT(2) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for red shares',
+MODIFY yellow_change SMALLINT(2) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for yellow shares',
+MODIFY green_change SMALLINT(2) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for green shares'";
+
+$versions[4]['down'][] = "ALTER TABLE turn
+MODIFY blue_change TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for blue shares',
+MODIFY red_change TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for red shares',
+MODIFY yellow_change TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for yellow shares',
+MODIFY green_change TINYINT(1) UNSIGNED NULL DEFAULT NULL COMMENT 'New price for green shares'";
+
+/* -------------------------------------------------------------------------------------------------------
+ * VERSION 3
+ * Forgot "after" values for turns, adding...
+*/
+$versions[3]['up'][] = "ALTER TABLE turn
+ADD blue_after BIGINT(10) UNSIGNED NOT NULL COMMENT 'Amount of blue shares after move' AFTER green_change,
+ADD red_after BIGINT(10) UNSIGNED NOT NULL COMMENT 'Amount of red shares after move' AFTER blue_after,
+ADD yellow_after BIGINT(10) UNSIGNED NOT NULL COMMENT 'Amount of yellow shares after move' AFTER red_after,
+ADD green_after BIGINT(10) UNSIGNED NOT NULL COMMENT 'Amount of green shares after move' AFTER yellow_after";
+
+$versions[3]['down'][] = "ALTER TABLE turn DROP blue_after, DROP red_after, DROP yellow_after, DROP green_after";
+
 /* -------------------------------------------------------------------------------------------------------
  * VERSION 2
  * Player table should have a primary and foreign keys
