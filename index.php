@@ -6,8 +6,8 @@ $user = User::require_login();
 
 // let's get a list of games for current user
 
-?><h1>Stock Trader</h1>
-
+require_once(dirname(__FILE__).'/header.php');
+?>
 <h2>Welcome, <?php echo $user->getName()?>!</h2>
 
 <p>Your games:</p>
@@ -19,9 +19,24 @@ Turn::getTurns($games);
 
 foreach ($games as $game) {
 	?><div>
-	<a href="game.php?name=<?php echo urlencode($game->getNumber().$game->getSuffix()) ?>"><?php
+	<a href="game.php?id=<?php echo urlencode($game->getID()) ?>">Game <?php
 	$players = $game->getPlayers();
 	echo $game->getNumber().$game->getSuffix()?></a>
+	[round <?php
+	$current_round = count($game->getRounds());
+
+	if ($current_round == 0 ) {
+		$current_round = 1;
+	}
+
+	echo $current_round;
+	?>
+	of
+	<?php
+	echo $game->getTotalRounds();
+	?>]
+
+	&mdash;
 
 	<?
 	$first = true;
@@ -33,8 +48,6 @@ foreach ($games as $game) {
 
 		if ($is_current) {
 			?><b><?php
-		} else {
-			?><a href="player.php?id=<?php echo htmlentities($player->getID()) ?>"><?php
 		}
 
 		echo $game_user->getName();
@@ -47,14 +60,8 @@ foreach ($games as $game) {
 		$first = false;
 	}?>
 
-	(<?php
-	echo count($game->getRounds());
-	?>
-	of
-	<?php
-	echo $game->getTotalRounds();
-	?>)
-
 	</div>
 <?php
 }
+
+require_once(dirname(__FILE__).'/footer.php');

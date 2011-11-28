@@ -701,11 +701,38 @@ class Game
 		return true;
 	}
 
+	public static function getGameByID($id) {
+		global $db;
+
+		if ($stmt = $db->prepare('SELECT
+				id,
+				number,
+				suffix,
+				big_cards_amount,
+				small_cards_amount,
+				rounding_up,
+				gpp.player_id
+			FROM game g
+			INNER JOIN game_players gpp ON g.id = gpp.game_id
+			WHERE g.id = ?
+			ORDER BY number, suffix, gpp.move_order')
+		) {
+			if (!$stmt->bind_param('i', $id))
+			{
+				 throw new Exception("Can't bind parameter".$stmt->error);
+			}
+
+			$games = self::getGames($stmt);
+
+			return $games[0];
+		} else {
+			throw new Exception("Can't prepare statement: ".$db->error);
+		}
+	}
+
 	// methods for DB connectivity
 	public static function getPlayerGames($player) {
 		global $db;
-
-		$game_data = array();
 
 		if ($stmt = $db->prepare('SELECT
 				id,
@@ -719,53 +746,60 @@ class Game
 			INNER JOIN game_players gp ON g.id = gp.game_id
 			INNER JOIN game_players gpp ON g.id = gpp.game_id
 			WHERE gp.player_id = ?
-			ORDER BY number, suffix, gpp.move_order
-			'))
-		{
+			ORDER BY number, suffix, gpp.move_order')
+		) {
 			$player_id = $player->getID();
 
 			if (!$stmt->bind_param('i', $player_id))
 			{
 				 throw new Exception("Can't bind parameter".$stmt->error);
 			}
-			if (!$stmt->execute())
-			{
-				throw new Exception("Can't execute statement: ".$stmt->error);
-			}
-			if (!$stmt->bind_result(
-				$id,
-				$number,
-				$suffix,
-				$big_cards_amount,
-				$small_cards_amount,
-				$rounding_up,
-				$player_id))
-			{
-				throw new Exception("Can't bind result: ".$stmt->error);
-			}
 
-			while($stmt->fetch() === TRUE) {
-				if (array_key_exists($id, $game_data)) {
-					$game_data[$id]['players'][] = new Player(null, $player_id);
-				} else {
-					$game_data[$id] = array(
-						'number' => $number,
-						'suffix' => $suffix,
-						'players' => array(
-							new Player(null, $player_id)
-						),
-						'big_cards_amount' => $big_cards_amount,
-						'small_cards_amount' => $small_cards_amount,
-						'rounding_up' => $rounding_up ? true : false
-					);
-				}
-			}
-			$stmt->close();
-		}
-		else
-		{
+			return self::getGames($stmt);
+		} else {
 			throw new Exception("Can't prepare statement: ".$db->error);
 		}
+	}
+
+	// methods for DB connectivity
+	private static function getGames($stmt) {
+		global $db;
+
+		$game_data = array();
+
+		if (!$stmt->execute())
+		{
+			throw new Exception("Can't execute statement: ".$stmt->error);
+		}
+		if (!$stmt->bind_result(
+			$id,
+			$number,
+			$suffix,
+			$big_cards_amount,
+			$small_cards_amount,
+			$rounding_up,
+			$player_id))
+		{
+			throw new Exception("Can't bind result: ".$stmt->error);
+		}
+
+		while($stmt->fetch() === TRUE) {
+			if (array_key_exists($id, $game_data)) {
+				$game_data[$id]['players'][] = new Player(null, $player_id);
+			} else {
+				$game_data[$id] = array(
+					'number' => $number,
+					'suffix' => $suffix,
+					'players' => array(
+						new Player(null, $player_id)
+					),
+					'big_cards_amount' => $big_cards_amount,
+					'small_cards_amount' => $small_cards_amount,
+					'rounding_up' => $rounding_up ? true : false
+				);
+			}
+		}
+		$stmt->close();
 
 		$game_decks = array();
 

@@ -1,0 +1,44 @@
+#header {
+	padding: 0.5em;
+	border-bottom: 1px solid #b27a1a;
+}
+
+#footer {
+	padding: 0.5em;
+	border-top: 1px solid #b27a1a;
+}
+
+#footerspacer {
+	background: white;
+	padding: 0.5em;
+}
+
+#main {
+	padding: 1em;
+	background: white;
+}
+
+#navbox {
+	float: right;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #d6ac62;
+}
+
+#madeby {
+	float: right;
+	font-size: small;
+}
+
+#title {
+	font-size: xx-large;
+	font-weight: bold;
+}
+
+#title a {
+	text-decoration: none;
+	color: black;
+}

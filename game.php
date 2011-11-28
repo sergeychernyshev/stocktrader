@@ -4,25 +4,41 @@ require_once(dirname(__FILE__).'/datamodel/Game.php');
 
 $user = User::require_login();
 
-require_once(dirname(__FILE__).'/archive/1A.php');
-?>
-<html>
-<head>
-	<title>Game - Stock game</title>
-	<link rel="stylesheet" type="text/css" href="game.css"/>
+$game = Game::getGameByID($_GET['id']);
+Turn::getTurns(array($game));
 
-</head>
-<body>
+$players = $game->getPlayers();
+
+$has_access = false;
+foreach ($players as $player) {
+	$player_user = $player->getUser();
+
+	if ($player_user->isTheSameAs($user)) {
+		$has_access = true;
+		break;
+	}
+}
+
+if (!$has_access) {
+	header('HTTP/1.0 403 Access denied');
+	exit;
+}
+
+$TITLE = 'Game '.$game->getNumber().$game->getSuffix();
+
+$STYLES[] = 'game.css';
+
+require_once(dirname(__FILE__).'/header.php');
+?>
 <div id="gamenumber">Game <span id="gamenum"><?php echo $game->getNumber() ?></span><span id="gamesuffix"><?php echo $game->getSuffix() ?></span></div>
 
 <div id="gameplayers">
 <?php
-$players = $game->getPlayers();
 
 for ($p=0; $p < count($players); $p++)
 {
 ?>
-	<div class="player" id="player<?php echo $p+1 ?>">
+	<div class="player player<?php echo $p+1 ?>">
 	<?php echo $players[$p]->asString() ?>
 	</div>
 <?php
@@ -70,6 +86,8 @@ for ($t=0; $t < count($rounds); $t++)
 
 			# printing amounts before
 			?>
+			<td class="turnplayer player<?php echo $m+1 ?>"><?php echo $players[$m]->asString() ?></td>
+
 			<td class="blue-before"><?php echo $turn->before[Card::BLUE] ?></td>
 			<td class="red-before"><?php echo $turn->before[Card::RED] ?></td>
 			<td class="yellow-before"><?php echo $turn->before[Card::YELLOW] ?></td>
@@ -107,24 +125,24 @@ for ($t=0; $t < count($rounds); $t++)
 		else
 		{
 		?>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 
-			<td></td>
+			<td>&nbsp;</td>
 			
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 
-			<td></td>
+			<td>&nbsp;</td>
 		<?php
 		}
 		?>
@@ -138,5 +156,5 @@ for ($t=0; $t < count($rounds); $t++)
 ?>
 </table>
 
-</body>
-</html>
+<?php
+require_once(dirname(__FILE__).'/footer.php');

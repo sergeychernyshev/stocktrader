@@ -3,8 +3,10 @@
 */
 #gamenumber {
 	padding: 10px;
-	border: 1px solid black;
-	float: right;
+	border: 1px solid silver;
+	float: left;
+	margin-right: 1em;
+	font-weight: bold;
 }
 
 #gamesuffix {
@@ -16,26 +18,31 @@
 	Game Players
 */
 #gameplayers {
+
+	margin-bottom: 1em;
+}
+
+.turnplayer {
+	width: 10em;
+	font-size: xx-small;
+	font-weight: bold;
 	border: 1px solid black;
-	width: 300px;
-	padding: 5px;
-
-	margin-bottom: 10px;
+	padding: 0 0.6em;
 }
 
-#player1 {
-	color: blue;
+.player1 {
+	color: #3b5999;
 }
 
-#player2 {
-	color: green;
+.player2 {
+	color: #91a93b;
 }
 
-#player3 {
+.player3 {
 	color: maroon;
 }
 
-#player4 {
+.player4 {
 	color: purple;
 }
 
@@ -57,6 +64,9 @@ td {
 
 td.roundnum {
 	border: 1px solid black;
+	font-size: xx-large;
+	width: 1em;
+	background: #fdd768;
 }
 
 td.blue-before, td.red-before, td.yellow-before, td.green-before {
@@ -65,11 +75,13 @@ td.blue-before, td.red-before, td.yellow-before, td.green-before {
 
 td.card {
 	border: 1px solid black;
+	width: 3.5em;
 }
 
 td.blue-price, td.red-price, td.yellow-price, td.green-price {
 	border: 1px solid black;
 	color: silver;
+	width: 3.5em;
 }
 
 td.changed {
