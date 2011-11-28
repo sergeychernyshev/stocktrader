@@ -43,7 +43,7 @@ class GameTest extends PHPUnit_Framework_TestCase
 				Card::getCard(29), // -60 Blue
 				Card::getCard(4),  // +30 Green
 
-				Card::getCard(33), // 100 Blue
+				Card::getCard(35), // 100 Blue
 				Card::getCard(38), // 100 Red
 				Card::getCard(51), // *2 Green
 				Card::getCard(37)  // :2 Blue
