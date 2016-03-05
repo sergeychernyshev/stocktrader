@@ -38,7 +38,7 @@ foreach ($games as $game) {
 
 	&mdash;
 
-	<?
+	<?php
 	$first = true;
 	foreach ($players as $player) {
 		echo $first ? '' : ' vs. ';
@@ -58,7 +58,8 @@ foreach ($games as $game) {
 			?></a><?php
 		}
 		$first = false;
-	}?>
+	}
+	?>
 
 	</div>
 <?php
